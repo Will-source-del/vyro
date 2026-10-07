@@ -6,23 +6,41 @@
 
   <title>VYRO — Watch. Create. Share.</title>
 
-  <meta
-    name="description"
-    content="VYRO is a video and Shorts platform where you can watch, create, share and connect."
-  >
-
   <style>
+    :root {
+      --blue: #5865f2;
+      --purple: #8b5cf6;
+      --pink: #ec4899;
+      --cyan: #06b6d4;
+      --green: #22c55e;
+      --orange: #f97316;
+      --yellow: #eab308;
+
+      --text: #171717;
+      --muted: #737373;
+      --border: #ececf1;
+      --background: #f8f9ff;
+      --white: #ffffff;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #ffffff;
-      color: #111111;
-      min-height: 100vh;
+      font-family:
+        Inter,
+        Arial,
+        Helvetica,
+        sans-serif;
+      background: var(--background);
+      color: var(--text);
     }
 
     button,
@@ -34,26 +52,42 @@
       cursor: pointer;
     }
 
-    /* HEADER */
+    /* =========================
+       HEADER
+    ========================= */
 
     .header {
-      height: 72px;
+      height: 74px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+
       display: flex;
       align-items: center;
       justify-content: space-between;
+
       padding: 0 28px;
-      border-bottom: 1px solid #eeeeee;
-      background: #ffffff;
+
       position: sticky;
       top: 0;
       z-index: 100;
     }
 
     .logo {
-      font-size: 29px;
-      font-weight: 900;
-      letter-spacing: -1.5px;
-      color: #111111;
+      font-size: 30px;
+      font-weight: 950;
+      letter-spacing: -2px;
+
+      background: linear-gradient(
+        90deg,
+        var(--blue),
+        var(--purple),
+        var(--pink)
+      );
+
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
     .header-center {
@@ -65,118 +99,179 @@
 
     .search {
       width: min(600px, 100%);
-      height: 44px;
-      border: 1px solid #dddddd;
-      border-radius: 24px;
+      height: 46px;
+
       display: flex;
       align-items: center;
+
+      background: #f5f6fb;
+      border: 1px solid #e6e7ee;
+      border-radius: 24px;
+
       overflow: hidden;
-      background: #fafafa;
+    }
+
+    .search:focus-within {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
     }
 
     .search input {
       flex: 1;
       height: 100%;
+
       border: 0;
-      outline: 0;
+      outline: none;
       background: transparent;
+
       padding: 0 18px;
+
       font-size: 15px;
     }
 
     .search button {
       width: 54px;
       height: 100%;
+
       border: 0;
-      background: #f2f2f2;
-      font-size: 18px;
+      background: transparent;
+
+      font-size: 20px;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 9px;
     }
 
     .icon-button {
       width: 42px;
       height: 42px;
+
       border: 0;
       border-radius: 50%;
+
       background: transparent;
-      font-size: 20px;
+
+      font-size: 19px;
     }
 
     .icon-button:hover {
-      background: #f3f3f3;
+      background: #f1f1f6;
     }
 
+    .signup-button,
     .login-button {
-      border: 1px solid #111111;
-      background: #111111;
-      color: white;
-      padding: 11px 19px;
+      padding: 11px 18px;
       border-radius: 22px;
-      font-weight: 700;
+      font-weight: 750;
+      transition: 0.2s;
     }
 
     .signup-button {
-      border: 1px solid #dddddd;
+      border: 1px solid #dedee7;
       background: white;
-      color: #111111;
-      padding: 11px 19px;
-      border-radius: 22px;
-      font-weight: 700;
     }
 
-    /* LAYOUT */
+    .signup-button:hover {
+      background: #f4f3ff;
+      border-color: #c9c4ff;
+    }
+
+    .login-button {
+      border: 0;
+      color: white;
+
+      background: linear-gradient(
+        135deg,
+        var(--blue),
+        var(--purple)
+      );
+
+      box-shadow: 0 6px 18px rgba(88, 101, 242, 0.25);
+    }
+
+    .login-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(88, 101, 242, 0.35);
+    }
+
+    /* =========================
+       LAYOUT
+    ========================= */
 
     .layout {
       display: flex;
-      min-height: calc(100vh - 72px);
+      min-height: calc(100vh - 74px);
     }
 
     .sidebar {
-      width: 230px;
-      border-right: 1px solid #eeeeee;
-      padding: 22px 14px;
+      width: 235px;
+
       position: fixed;
-      top: 72px;
+      top: 74px;
       bottom: 0;
-      background: #ffffff;
+
+      padding: 22px 14px;
+
+      background: white;
+      border-right: 1px solid var(--border);
     }
 
     .nav-section {
-      margin-bottom: 26px;
+      margin-bottom: 27px;
     }
 
     .nav-title {
       padding: 0 12px 9px;
-      color: #888888;
-      font-size: 12px;
-      font-weight: 700;
+
+      color: #9696a2;
+
+      font-size: 11px;
+      font-weight: 800;
+
       text-transform: uppercase;
-      letter-spacing: .6px;
+      letter-spacing: 0.8px;
     }
 
     .nav-item {
       width: 100%;
+
       display: flex;
       align-items: center;
+
       gap: 13px;
-      border: 0;
-      background: transparent;
+
       padding: 12px;
-      border-radius: 10px;
+
+      border: 0;
+      border-radius: 11px;
+
+      background: transparent;
+
+      color: #44444d;
+
+      font-weight: 650;
+
       text-align: left;
-      font-weight: 600;
-      color: #333333;
+
+      transition: 0.2s;
     }
 
-    .nav-item:hover,
+    .nav-item:hover {
+      background: #f4f4fb;
+      transform: translateX(2px);
+    }
+
     .nav-item.active {
-      background: #f2f2f2;
-      color: #111111;
+      background: linear-gradient(
+        90deg,
+        rgba(88, 101, 242, 0.12),
+        rgba(139, 92, 246, 0.08)
+      );
+
+      color: var(--blue);
     }
 
     .nav-icon {
@@ -185,76 +280,163 @@
       font-size: 18px;
     }
 
-    /* MAIN */
+    /* =========================
+       MAIN
+    ========================= */
 
     .main {
-      margin-left: 230px;
-      width: calc(100% - 230px);
+      margin-left: 235px;
+      width: calc(100% - 235px);
+
       padding: 30px;
     }
 
     .welcome {
-      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+
+      padding: 34px;
+
+      border-radius: 22px;
+
+      background:
+        radial-gradient(
+          circle at 85% 20%,
+          rgba(236, 72, 153, 0.3),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 60% 100%,
+          rgba(6, 182, 212, 0.3),
+          transparent 30%
+        ),
+        linear-gradient(
+          135deg,
+          #5967f2,
+          #8059e9 50%,
+          #ec4899
+        );
+
+      color: white;
+
+      margin-bottom: 25px;
+
+      box-shadow: 0 16px 40px rgba(88, 101, 242, 0.2);
     }
 
     .welcome h1 {
-      font-size: 32px;
-      letter-spacing: -1px;
+      font-size: 35px;
+      letter-spacing: -1.3px;
       margin-bottom: 8px;
     }
 
     .welcome p {
-      color: #777777;
-      font-size: 15px;
+      opacity: 0.9;
+      font-size: 16px;
     }
 
-    /* CATEGORY BAR */
+    .welcome-badge {
+      display: inline-block;
+
+      margin-top: 18px;
+
+      padding: 7px 12px;
+
+      border-radius: 20px;
+
+      background: rgba(255, 255, 255, 0.17);
+
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    /* =========================
+       CATEGORIES
+    ========================= */
 
     .categories {
       display: flex;
       gap: 9px;
+
       overflow-x: auto;
-      padding-bottom: 24px;
+
+      padding: 2px 0 25px;
     }
 
     .category {
       border: 0;
-      background: #f1f1f1;
-      border-radius: 20px;
+
       padding: 9px 16px;
+
+      border-radius: 20px;
+
+      background: white;
+
+      border: 1px solid #e8e8ef;
+
       white-space: nowrap;
-      font-weight: 600;
+
+      font-weight: 650;
+
+      transition: 0.2s;
+    }
+
+    .category:hover {
+      transform: translateY(-1px);
+      border-color: #cfcdf8;
     }
 
     .category.active {
-      background: #111111;
       color: white;
+
+      border: 0;
+
+      background: linear-gradient(
+        135deg,
+        var(--blue),
+        var(--purple)
+      );
+
+      box-shadow: 0 5px 15px rgba(88, 101, 242, 0.2);
     }
 
-    /* VIDEO GRID */
+    /* =========================
+       SECTIONS
+    ========================= */
 
     .section-heading {
       display: flex;
       align-items: center;
       justify-content: space-between;
+
       margin-bottom: 18px;
     }
 
     .section-heading h2 {
       font-size: 22px;
+      letter-spacing: -0.5px;
     }
 
     .view-all {
       border: 0;
       background: transparent;
-      font-weight: 700;
-      color: #555555;
+
+      color: var(--blue);
+
+      font-weight: 750;
     }
+
+    /* =========================
+       VIDEOS
+    ========================= */
 
     .video-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 25px 18px;
+
+      grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+      gap: 27px 18px;
     }
 
     .video-card {
@@ -265,71 +447,178 @@
     .thumbnail {
       width: 100%;
       aspect-ratio: 16 / 9;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #eeeeee, #d9d9d9);
+
+      border-radius: 14px;
+
       position: relative;
-      overflow: hidden;
+
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #888888;
-      font-size: 30px;
+
+      overflow: hidden;
+
+      color: white;
+
+      font-size: 31px;
+
+      transition: 0.25s;
+
+      box-shadow:
+        0 7px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .video-card:nth-child(1) .thumbnail {
+      background:
+        linear-gradient(
+          135deg,
+          #5967f2,
+          #8b5cf6
+        );
+    }
+
+    .video-card:nth-child(2) .thumbnail {
+      background:
+        linear-gradient(
+          135deg,
+          #06b6d4,
+          #3b82f6
+        );
+    }
+
+    .video-card:nth-child(3) .thumbnail {
+      background:
+        linear-gradient(
+          135deg,
+          #ec4899,
+          #8b5cf6
+        );
+    }
+
+    .video-card:nth-child(4) .thumbnail {
+      background:
+        linear-gradient(
+          135deg,
+          #f97316,
+          #eab308
+        );
+    }
+
+    .video-card:hover .thumbnail {
+      transform: translateY(-3px);
+      box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.14);
     }
 
     .duration {
       position: absolute;
+
       bottom: 8px;
       right: 8px;
-      background: rgba(0, 0, 0, .8);
-      color: white;
+
       padding: 4px 7px;
+
       border-radius: 5px;
+
+      background: rgba(0, 0, 0, 0.75);
+
+      color: white;
+
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 750;
     }
 
     .video-info {
       display: flex;
       gap: 11px;
+
       padding-top: 11px;
     }
 
     .creator-avatar {
       width: 38px;
       height: 38px;
+
       min-width: 38px;
-      border-radius: 50%;
-      background: #eeeeee;
+
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
+
+      border-radius: 50%;
+
+      color: white;
+
       font-size: 13px;
+      font-weight: 850;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--blue),
+          var(--pink)
+        );
+    }
+
+    .video-card:nth-child(2) .creator-avatar {
+      background:
+        linear-gradient(
+          135deg,
+          var(--cyan),
+          var(--blue)
+        );
+    }
+
+    .video-card:nth-child(3) .creator-avatar {
+      background:
+        linear-gradient(
+          135deg,
+          var(--pink),
+          var(--purple)
+        );
+    }
+
+    .video-card:nth-child(4) .creator-avatar {
+      background:
+        linear-gradient(
+          135deg,
+          var(--orange),
+          var(--yellow)
+        );
     }
 
     .video-title {
       font-size: 15px;
       line-height: 1.35;
-      font-weight: 700;
+
+      font-weight: 750;
+
       margin-bottom: 5px;
     }
 
     .creator-name,
     .video-stats {
+      color: var(--muted);
+
       font-size: 13px;
-      color: #777777;
+
       line-height: 1.5;
     }
 
-    /* SHORTS */
+    /* =========================
+       SHORTS
+    ========================= */
 
     .shorts-section {
-      margin-top: 45px;
+      margin-top: 48px;
     }
 
     .shorts-grid {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+
+      grid-template-columns:
+        repeat(6, minmax(0, 1fr));
+
       gap: 15px;
     }
 
@@ -339,15 +628,85 @@
 
     .short-thumbnail {
       aspect-ratio: 9 / 15;
-      border-radius: 12px;
-      background: linear-gradient(160deg, #eeeeee, #d3d3d3);
+
+      position: relative;
+
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 27px;
-      color: #888888;
-      position: relative;
+
       overflow: hidden;
+
+      border-radius: 14px;
+
+      color: white;
+
+      font-size: 27px;
+
+      transition: 0.25s;
+
+      box-shadow:
+        0 7px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .short-card:nth-child(1) .short-thumbnail {
+      background:
+        linear-gradient(
+          160deg,
+          #ec4899,
+          #8b5cf6
+        );
+    }
+
+    .short-card:nth-child(2) .short-thumbnail {
+      background:
+        linear-gradient(
+          160deg,
+          #06b6d4,
+          #3b82f6
+        );
+    }
+
+    .short-card:nth-child(3) .short-thumbnail {
+      background:
+        linear-gradient(
+          160deg,
+          #f97316,
+          #ec4899
+        );
+    }
+
+    .short-card:nth-child(4) .short-thumbnail {
+      background:
+        linear-gradient(
+          160deg,
+          #22c55e,
+          #06b6d4
+        );
+    }
+
+    .short-card:nth-child(5) .short-thumbnail {
+      background:
+        linear-gradient(
+          160deg,
+          #eab308,
+          #f97316
+        );
+    }
+
+    .short-card:nth-child(6) .short-thumbnail {
+      background:
+        linear-gradient(
+          160deg,
+          #8b5cf6,
+          #3b82f6
+        );
+    }
+
+    .short-card:hover .short-thumbnail {
+      transform: translateY(-4px);
+      box-shadow:
+        0 14px 30px rgba(0, 0, 0, 0.15);
     }
 
     .short-info {
@@ -356,72 +715,120 @@
 
     .short-title {
       font-size: 14px;
-      font-weight: 700;
       line-height: 1.35;
+      font-weight: 750;
     }
 
     .short-views {
-      color: #777777;
+      color: var(--muted);
       font-size: 12px;
       margin-top: 4px;
     }
 
-    /* CREATOR BANNER */
+    /* =========================
+       CREATOR AREA
+    ========================= */
 
     .creator-banner {
-      margin-top: 50px;
-      border: 1px solid #eeeeee;
-      border-radius: 18px;
-      padding: 25px;
+      margin-top: 52px;
+
       display: flex;
       align-items: center;
       justify-content: space-between;
+
       gap: 20px;
-      background: #fafafa;
+
+      padding: 28px;
+
+      border-radius: 20px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #ffffff,
+          #f2efff
+        );
+
+      border: 1px solid #e2defb;
+
+      box-shadow:
+        0 10px 30px rgba(88, 101, 242, 0.06);
     }
 
     .creator-banner h2 {
       margin-bottom: 7px;
+      font-size: 21px;
     }
 
     .creator-banner p {
-      color: #777777;
+      color: var(--muted);
       font-size: 14px;
     }
 
     .studio-button {
       border: 0;
-      background: #111111;
-      color: white;
-      border-radius: 10px;
+
       padding: 13px 20px;
-      font-weight: 700;
+
+      border-radius: 11px;
+
+      color: white;
+
+      font-weight: 750;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--blue),
+          var(--purple)
+        );
+
+      box-shadow:
+        0 7px 18px rgba(88, 101, 242, 0.22);
+
       white-space: nowrap;
     }
 
-    /* FOOTER */
+    .studio-button:hover {
+      transform: translateY(-2px);
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
 
     footer {
       margin-top: 60px;
-      border-top: 1px solid #eeeeee;
+
       padding: 28px 0;
-      color: #888888;
+
+      border-top: 1px solid var(--border);
+
+      color: #9999a5;
+
       font-size: 13px;
     }
 
-    /* RESPONSIVE */
+    /* =========================
+       RESPONSIVE
+    ========================= */
 
     @media (max-width: 1200px) {
+
       .video-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns:
+          repeat(3, minmax(0, 1fr));
       }
 
       .shorts-grid {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns:
+          repeat(5, minmax(0, 1fr));
       }
+
     }
 
     @media (max-width: 900px) {
+
       .sidebar {
         width: 76px;
       }
@@ -441,19 +848,23 @@
       }
 
       .video-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
       }
 
       .shorts-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns:
+          repeat(4, minmax(0, 1fr));
       }
 
       .header-center {
         padding: 0 15px;
       }
+
     }
 
     @media (max-width: 650px) {
+
       .header {
         padding: 0 14px;
       }
@@ -469,11 +880,15 @@
       .main {
         margin-left: 0;
         width: 100%;
-        padding: 20px 15px;
+        padding: 18px 15px;
+      }
+
+      .welcome {
+        padding: 26px;
       }
 
       .welcome h1 {
-        font-size: 26px;
+        font-size: 28px;
       }
 
       .video-grid {
@@ -481,7 +896,8 @@
       }
 
       .shorts-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
       }
 
       .creator-banner {
@@ -492,91 +908,143 @@
       .signup-button {
         display: none;
       }
+
     }
   </style>
 </head>
 
 <body>
 
+  <!-- HEADER -->
+
   <header class="header">
 
-    <div class="logo">VYRO</div>
+    <div class="logo">
+      VYRO
+    </div>
 
     <div class="header-center">
+
       <div class="search">
+
         <input
-          type="search"
           id="searchInput"
+          type="search"
           placeholder="Search VYRO"
           aria-label="Search VYRO"
         >
-        <button onclick="searchVYRO()" aria-label="Search">⌕</button>
+
+        <button
+          onclick="searchVYRO()"
+          aria-label="Search"
+        >
+          🔎
+        </button>
+
       </div>
+
     </div>
 
     <div class="header-actions">
-      <button class="icon-button" title="Notifications">🔔</button>
-      <button class="signup-button" onclick="openSignup()">Sign up</button>
-      <button class="login-button" onclick="openLogin()">Sign in</button>
+
+      <button
+        class="icon-button"
+        title="Notifications"
+      >
+        🔔
+      </button>
+
+      <button
+        class="signup-button"
+        onclick="openSignup()"
+      >
+        Sign up
+      </button>
+
+      <button
+        class="login-button"
+        onclick="openLogin()"
+      >
+        Sign in
+      </button>
+
     </div>
 
   </header>
 
+
+  <!-- PAGE -->
+
   <div class="layout">
+
+
+    <!-- SIDEBAR -->
 
     <aside class="sidebar">
 
       <div class="nav-section">
 
         <button class="nav-item active">
-          <span class="nav-icon">⌂</span>
+          <span class="nav-icon">🏠</span>
           <span>Home</span>
         </button>
 
         <button class="nav-item">
-          <span class="nav-icon">▶</span>
+          <span class="nav-icon">▶️</span>
           <span>Shorts</span>
         </button>
 
         <button class="nav-item">
-          <span class="nav-icon">▣</span>
+          <span class="nav-icon">📺</span>
           <span>Subscriptions</span>
         </button>
 
       </div>
 
+
       <div class="nav-section">
 
-        <div class="nav-title">You</div>
+        <div class="nav-title">
+          You
+        </div>
 
         <button class="nav-item">
-          <span class="nav-icon">◷</span>
+          <span class="nav-icon">🕘</span>
           <span>History</span>
         </button>
 
         <button class="nav-item">
-          <span class="nav-icon">♡</span>
+          <span class="nav-icon">❤️</span>
           <span>Liked videos</span>
         </button>
 
         <button class="nav-item">
-          <span class="nav-icon">▤</span>
+          <span class="nav-icon">📚</span>
           <span>Playlists</span>
         </button>
 
       </div>
 
+
       <div class="nav-section">
 
-        <div class="nav-title">Create</div>
+        <div class="nav-title">
+          Create
+        </div>
 
-        <button class="nav-item">
-          <span class="nav-icon">＋</span>
+        <button
+          class="nav-item"
+          onclick="openSignup()"
+        >
+          <span class="nav-icon">➕</span>
           <span>Upload</span>
         </button>
 
-        <button class="nav-item">
-          <span class="nav-icon">▣</span>
+        <button
+          class="nav-item"
+          onclick="openSignup()"
+        >
+          <span class="nav-icon">🎛️</span>
           <span>VYRO Studio</span>
         </button>
 
@@ -584,52 +1052,110 @@
 
     </aside>
 
+
+    <!-- MAIN -->
+
     <main class="main">
+
+
+      <!-- WELCOME -->
 
       <section class="welcome">
 
-        <h1>Welcome to VYRO</h1>
+        <h1>
+          Welcome to VYRO
+        </h1>
 
         <p>
           Watch. Create. Share.
         </p>
 
+        <span class="welcome-badge">
+          ✨ Your new home for video
+        </span>
+
       </section>
+
+
+      <!-- CATEGORIES -->
 
       <div class="categories">
 
-        <button class="category active">All</button>
-        <button class="category">Gaming</button>
-        <button class="category">Music</button>
-        <button class="category">Entertainment</button>
-        <button class="category">Sports</button>
-        <button class="category">News</button>
-        <button class="category">Technology</button>
-        <button class="category">Education</button>
+        <button class="category active">
+          All
+        </button>
+
+        <button class="category">
+          🎮 Gaming
+        </button>
+
+        <button class="category">
+          🎵 Music
+        </button>
+
+        <button class="category">
+          😂 Entertainment
+        </button>
+
+        <button class="category">
+          ⚽ Sports
+        </button>
+
+        <button class="category">
+          📰 News
+        </button>
+
+        <button class="category">
+          💻 Technology
+        </button>
+
+        <button class="category">
+          📚 Education
+        </button>
 
       </div>
+
+
+      <!-- RECOMMENDED -->
 
       <section>
 
         <div class="section-heading">
-          <h2>Recommended</h2>
-          <button class="view-all">View all</button>
+
+          <h2>
+            Recommended
+          </h2>
+
+          <button class="view-all">
+            View all
+          </button>
+
         </div>
 
+
         <div class="video-grid">
+
 
           <article class="video-card">
 
             <div class="thumbnail">
-              ▶
-              <span class="duration">12:45</span>
+
+              ▶️
+
+              <span class="duration">
+                12:45
+              </span>
+
             </div>
 
             <div class="video-info">
 
-              <div class="creator-avatar">V</div>
+              <div class="creator-avatar">
+                V
+              </div>
 
               <div>
+
                 <div class="video-title">
                   Your first video on VYRO
                 </div>
@@ -641,24 +1167,34 @@
                 <div class="video-stats">
                   125K views · 2 days ago
                 </div>
+
               </div>
 
             </div>
 
           </article>
 
+
           <article class="video-card">
 
             <div class="thumbnail">
-              ▶
-              <span class="duration">8:32</span>
+
+              ▶️
+
+              <span class="duration">
+                8:32
+              </span>
+
             </div>
 
             <div class="video-info">
 
-              <div class="creator-avatar">G</div>
+              <div class="creator-avatar">
+                G
+              </div>
 
               <div>
+
                 <div class="video-title">
                   The ultimate gaming setup
                 </div>
@@ -670,24 +1206,34 @@
                 <div class="video-stats">
                   82K views · 5 hours ago
                 </div>
+
               </div>
 
             </div>
 
           </article>
 
+
           <article class="video-card">
 
             <div class="thumbnail">
-              ▶
-              <span class="duration">15:21</span>
+
+              ▶️
+
+              <span class="duration">
+                15:21
+              </span>
+
             </div>
 
             <div class="video-info">
 
-              <div class="creator-avatar">T</div>
+              <div class="creator-avatar">
+                T
+              </div>
 
               <div>
+
                 <div class="video-title">
                   Building something amazing
                 </div>
@@ -699,24 +1245,34 @@
                 <div class="video-stats">
                   241K views · 1 day ago
                 </div>
+
               </div>
 
             </div>
 
           </article>
 
+
           <article class="video-card">
 
             <div class="thumbnail">
-              ▶
-              <span class="duration">21:04</span>
+
+              ▶️
+
+              <span class="duration">
+                21:04
+              </span>
+
             </div>
 
             <div class="video-info">
 
-              <div class="creator-avatar">C</div>
+              <div class="creator-avatar">
+                C
+              </div>
 
               <div>
+
                 <div class="video-title">
                   A day in the life
                 </div>
@@ -728,120 +1284,237 @@
                 <div class="video-stats">
                   94K views · 3 days ago
                 </div>
+
               </div>
 
             </div>
 
           </article>
 
+
         </div>
 
       </section>
+
+
+      <!-- SHORTS -->
 
       <section class="shorts-section">
 
         <div class="section-heading">
-          <h2>Shorts</h2>
-          <button class="view-all">View all</button>
+
+          <h2>
+            Shorts
+          </h2>
+
+          <button class="view-all">
+            View all
+          </button>
+
         </div>
+
 
         <div class="shorts-grid">
 
-          <article class="short-card">
-            <div class="short-thumbnail">▶</div>
-            <div class="short-info">
-              <div class="short-title">This changed everything...</div>
-              <div class="short-views">1.2M views</div>
-            </div>
-          </article>
 
           <article class="short-card">
-            <div class="short-thumbnail">▶</div>
-            <div class="short-info">
-              <div class="short-title">Wait until the end!</div>
-              <div class="short-views">842K views</div>
+
+            <div class="short-thumbnail">
+              ▶️
             </div>
+
+            <div class="short-info">
+
+              <div class="short-title">
+                This changed everything...
+              </div>
+
+              <div class="short-views">
+                1.2M views
+              </div>
+
+            </div>
+
           </article>
 
-          <article class="short-card">
-            <div class="short-thumbnail">▶</div>
-            <div class="short-info">
-              <div class="short-title">Gaming moment 😂</div>
-              <div class="short-views">526K views</div>
-            </div>
-          </article>
 
           <article class="short-card">
-            <div class="short-thumbnail">▶</div>
-            <div class="short-info">
-              <div class="short-title">You need to see this</div>
-              <div class="short-views">319K views</div>
+
+            <div class="short-thumbnail">
+              ▶️
             </div>
+
+            <div class="short-info">
+
+              <div class="short-title">
+                Wait until the end!
+              </div>
+
+              <div class="short-views">
+                842K views
+              </div>
+
+            </div>
+
           </article>
 
-          <article class="short-card">
-            <div class="short-thumbnail">▶</div>
-            <div class="short-info">
-              <div class="short-title">Insane!</div>
-              <div class="short-views">207K views</div>
-            </div>
-          </article>
 
           <article class="short-card">
-            <div class="short-thumbnail">▶</div>
-            <div class="short-info">
-              <div class="short-title">How did they do that?</div>
-              <div class="short-views">156K views</div>
+
+            <div class="short-thumbnail">
+              ▶️
             </div>
+
+            <div class="short-info">
+
+              <div class="short-title">
+                Gaming moment 😂
+              </div>
+
+              <div class="short-views">
+                526K views
+              </div>
+
+            </div>
+
           </article>
+
+
+          <article class="short-card">
+
+            <div class="short-thumbnail">
+              ▶️
+            </div>
+
+            <div class="short-info">
+
+              <div class="short-title">
+                You need to see this
+              </div>
+
+              <div class="short-views">
+                319K views
+              </div>
+
+            </div>
+
+          </article>
+
+
+          <article class="short-card">
+
+            <div class="short-thumbnail">
+              ▶️
+            </div>
+
+            <div class="short-info">
+
+              <div class="short-title">
+                Insane!
+              </div>
+
+              <div class="short-views">
+                207K views
+              </div>
+
+            </div>
+
+          </article>
+
+
+          <article class="short-card">
+
+            <div class="short-thumbnail">
+              ▶️
+            </div>
+
+            <div class="short-info">
+
+              <div class="short-title">
+                How did they do that?
+              </div>
+
+              <div class="short-views">
+                156K views
+              </div>
+
+            </div>
+
+          </article>
+
 
         </div>
 
       </section>
 
+
+      <!-- CREATOR -->
+
       <section class="creator-banner">
 
         <div>
-          <h2>Ready to become a creator?</h2>
+
+          <h2>
+            Ready to become a creator?
+          </h2>
+
           <p>
             Upload videos, create Shorts and build your audience on VYRO.
           </p>
+
         </div>
 
-        <button class="studio-button" onclick="openSignup()">
+        <button
+          class="studio-button"
+          onclick="openSignup()"
+        >
           Start creating
         </button>
 
       </section>
 
+
       <footer>
         © 2026 VYRO · Watch. Create. Share.
       </footer>
+
 
     </main>
 
   </div>
 
+
   <script>
 
     function openLogin() {
-      alert("VYRO Sign In will be connected to the account system next.");
+      alert(
+        "VYRO Sign In is coming next."
+      );
     }
 
     function openSignup() {
-      alert("VYRO Sign Up will be connected to the account system next.");
+      alert(
+        "VYRO Sign Up is coming next."
+      );
     }
 
     function searchVYRO() {
-      const input = document.getElementById("searchInput");
-      const query = input.value.trim();
+
+      const input =
+        document.getElementById("searchInput");
+
+      const query =
+        input.value.trim();
 
       if (!query) {
         input.focus();
         return;
       }
 
-      alert("Searching VYRO for: " + query);
+      alert(
+        "Searching VYRO for: " + query
+      );
+
     }
 
   </script>
