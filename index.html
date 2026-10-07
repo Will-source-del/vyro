@@ -1574,6 +1574,286 @@ footer {
     font-size: 40px;
   }
 }
+
+/* =========================
+   PUBLISHER STUDIO / UPLOAD
+========================= */
+
+.studio-shell {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+}
+
+.studio-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 25px;
+  box-shadow: var(--shadow);
+}
+
+.studio-card h2 {
+  margin-bottom: 7px;
+}
+
+.studio-subtitle {
+  color: var(--muted);
+  line-height: 1.55;
+  margin-bottom: 22px;
+}
+
+.upload-dropzone {
+  border: 2px dashed #c8c1ff;
+  border-radius: 20px;
+  padding: 32px 20px;
+  text-align: center;
+  background:
+    linear-gradient(135deg,#f5f9ff,#faf6ff,#fff5fa);
+  transition: .2s;
+}
+
+.upload-dropzone.dragover {
+  border-color: #7654ff;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(118,84,255,.12);
+}
+
+.upload-icon {
+  font-size: 45px;
+  margin-bottom: 10px;
+}
+
+.upload-file-name {
+  margin-top: 12px;
+  font-weight: 850;
+  word-break: break-word;
+}
+
+.upload-file-meta {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.studio-grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 15px;
+}
+
+.studio-field {
+  margin-bottom: 16px;
+}
+
+.studio-field.full {
+  grid-column: 1 / -1;
+}
+
+.studio-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 850;
+  margin-bottom: 7px;
+}
+
+.studio-field input,
+.studio-field textarea,
+.studio-field select {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fafaff;
+  outline: none;
+}
+
+.studio-field textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.studio-field input:focus,
+.studio-field textarea:focus,
+.studio-field select:focus {
+  border-color: #7654ff;
+  box-shadow: 0 0 0 4px rgba(118,84,255,.07);
+  background: white;
+}
+
+.upload-type-row,
+.visibility-row {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 10px;
+}
+
+.choice-card {
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 14px;
+  padding: 13px;
+  text-align: left;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.choice-card.active {
+  border-color: #7654ff;
+  background: linear-gradient(135deg,#f0f6ff,#f6f0ff,#fff1f8);
+  box-shadow: 0 0 0 2px rgba(118,84,255,.08);
+}
+
+.thumbnail-preview {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 16px;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg,#347cff,#7654ff,#ff42a1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 38px;
+  margin-bottom: 10px;
+}
+
+.thumbnail-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.progress-wrap {
+  margin-top: 20px;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 7px;
+}
+
+.progress-track {
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #eceaf7;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--gradient);
+  transition: width .15s;
+}
+
+.studio-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.studio-side-list {
+  display: grid;
+  gap: 12px;
+}
+
+.studio-tip {
+  padding: 15px;
+  border-radius: 15px;
+  background: linear-gradient(135deg,#eff6ff,#f7f1ff,#fff2f8);
+  border: 1px solid #e7e0ff;
+}
+
+.studio-tip strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.studio-tip span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.creator-video {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  padding: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.creator-video-thumb {
+  width: 110px;
+  aspect-ratio: 16/9;
+  border-radius: 11px;
+  overflow: hidden;
+  background: linear-gradient(135deg,#347cff,#7654ff,#ff42a1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.creator-video-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.creator-video-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.creator-video-title {
+  font-weight: 850;
+  margin-bottom: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.creator-video-meta {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media(max-width:900px) {
+  .studio-shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media(max-width:650px) {
+  .studio-grid,
+  .upload-type-row,
+  .visibility-row {
+    grid-template-columns: 1fr;
+  }
+
+  .studio-card {
+    padding: 18px;
+  }
+
+  .studio-actions {
+    flex-direction: column;
+  }
+
+  .studio-actions button {
+    width: 100%;
+  }
+}
+
 </style>
 </head>
 
@@ -1754,14 +2034,14 @@ footer {
 
     <button
       class="nav-btn"
-      onclick="requireLogin('Upload')"
+      onclick="openStudio()"
     >
       ⬆️ Upload
     </button>
 
     <button
       class="nav-btn"
-      onclick="requireLogin('VYRO Studio')"
+      onclick="openStudio()"
     >
       🎬 VYRO Studio
     </button>
@@ -2040,6 +2320,213 @@ footer {
 
 </div>
 
+
+<!-- PUBLISHER STUDIO -->
+
+<div
+  id="studioModal"
+  class="modal-overlay hidden"
+>
+  <div class="modal large">
+    <div class="studio-card" style="box-shadow:none;border:0;padding:0;">
+      <h2>🎬 VYRO Publisher Studio</h2>
+      <p class="studio-subtitle">
+        Upload a video or Short, add your details, choose who can watch it,
+        and publish it directly to VYRO.
+      </p>
+
+      <div
+        id="studioDropzone"
+        class="upload-dropzone"
+        onclick="document.getElementById('studioVideoInput').click()"
+      >
+        <div class="upload-icon">🎥</div>
+        <strong>Choose a video to upload</strong>
+        <div style="color:var(--muted);margin-top:6px;">
+          MP4, WebM, MOV and other browser-supported video files
+        </div>
+        <div
+          id="studioVideoName"
+          class="upload-file-name hidden"
+        ></div>
+        <div
+          id="studioVideoMeta"
+          class="upload-file-meta hidden"
+        ></div>
+      </div>
+
+      <input
+        id="studioVideoInput"
+        class="hidden"
+        type="file"
+        accept="video/*"
+        onchange="selectStudioVideo(event)"
+      >
+
+      <div class="studio-grid" style="margin-top:20px;">
+
+        <div class="studio-field full">
+          <label>Title</label>
+          <input
+            id="studioTitle"
+            type="text"
+            maxlength="120"
+            placeholder="Give your video a title"
+          >
+        </div>
+
+        <div class="studio-field full">
+          <label>Description</label>
+          <textarea
+            id="studioDescription"
+            maxlength="5000"
+            placeholder="Tell viewers about your video..."
+          ></textarea>
+        </div>
+
+        <div class="studio-field full">
+          <label>Content type</label>
+          <div class="upload-type-row">
+            <button
+              type="button"
+              id="studioTypeVideo"
+              class="choice-card active"
+              onclick="setStudioType('video')"
+            >
+              🎬 Video
+              <small style="display:block;color:var(--muted);margin-top:4px;">
+                Standard landscape video
+              </small>
+            </button>
+
+            <button
+              type="button"
+              id="studioTypeShort"
+              class="choice-card"
+              onclick="setStudioType('short')"
+            >
+              ⚡ Short
+              <small style="display:block;color:var(--muted);margin-top:4px;">
+                Short-form vertical content
+              </small>
+            </button>
+          </div>
+        </div>
+
+        <div class="studio-field full">
+          <label>Visibility</label>
+          <div class="visibility-row">
+            <button
+              type="button"
+              id="studioVisibilityPublic"
+              class="choice-card active"
+              onclick="setStudioVisibility('public')"
+            >
+              🌎 Public
+              <small style="display:block;color:var(--muted);margin-top:4px;">
+                Anyone can watch
+              </small>
+            </button>
+
+            <button
+              type="button"
+              id="studioVisibilityUnlisted"
+              class="choice-card"
+              onclick="setStudioVisibility('unlisted')"
+            >
+              🔗 Unlisted
+              <small style="display:block;color:var(--muted);margin-top:4px;">
+                Only people with the link
+              </small>
+            </button>
+
+            <button
+              type="button"
+              id="studioVisibilityMembership"
+              class="choice-card"
+              onclick="setStudioVisibility('membership')"
+            >
+              🔒 Membership Only
+              <small style="display:block;color:var(--muted);margin-top:4px;">
+                Reserved for members
+              </small>
+            </button>
+          </div>
+        </div>
+
+        <div class="studio-field">
+          <label>Thumbnail</label>
+
+          <div id="studioThumbnailPreview" class="thumbnail-preview">
+            🖼️
+          </div>
+
+          <input
+            id="studioThumbnailInput"
+            type="file"
+            accept="image/*"
+            onchange="selectStudioThumbnail(event)"
+          >
+        </div>
+
+        <div class="studio-field">
+          <label>Publishing checklist</label>
+
+          <div class="studio-side-list">
+            <div class="studio-tip">
+              <strong>🎯 Be clear</strong>
+              <span>Use a title that tells viewers exactly what the video is about.</span>
+            </div>
+
+            <div class="studio-tip">
+              <strong>🖼️ Add a thumbnail</strong>
+              <span>A custom thumbnail helps your video stand out.</span>
+            </div>
+
+            <div class="studio-tip">
+              <strong>🔒 Choose visibility</strong>
+              <span>You can publish publicly, unlisted, or membership-only.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="studioProgressWrap" class="progress-wrap hidden">
+        <div class="progress-label">
+          <span id="studioProgressText">Uploading...</span>
+          <span id="studioProgressPercent">0%</span>
+        </div>
+
+        <div class="progress-track">
+          <div
+            id="studioProgressBar"
+            class="progress-bar"
+          ></div>
+        </div>
+      </div>
+
+      <div class="studio-actions">
+        <button
+          id="studioCancelButton"
+          class="secondary"
+          onclick="closeStudio()"
+        >
+          Cancel
+        </button>
+
+        <button
+          id="studioPublishButton"
+          class="primary"
+          onclick="publishStudioVideo()"
+        >
+          🚀 Publish to VYRO
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- SETTINGS -->
 
 <div
@@ -2162,6 +2649,12 @@ const VYRO_URL =
 
 const STORAGE_BUCKET =
   "profile-pictures";
+
+const VIDEO_BUCKET =
+  "videos";
+
+const THUMBNAIL_BUCKET =
+  "thumbnails";
 
 const supabaseClient =
   window.supabase.createClient(
@@ -2450,7 +2943,7 @@ function renderHome() {
 
         <button
           class="hero-button"
-          onclick="requireLogin('Create on VYRO')"
+          onclick="openStudio()"
         >
           Start creating
         </button>
@@ -2649,6 +3142,7 @@ function shortCard(icon,title) {
 
 function showHome() {
   renderHome();
+  loadPublishedVideos();
 }
 
 function showShorts() {
@@ -2723,6 +3217,10 @@ function showSubscriptions() {
 
   `;
 
+}
+
+function showCreatorStudio() {
+  openStudio();
 }
 
 function showPlaceholder(name) {
@@ -3194,7 +3692,7 @@ function showProfile() {
 
         <button
           class="secondary"
-          onclick="requireLogin('VYRO Studio')"
+          onclick="openStudio()"
         >
           Open Studio
         </button>
@@ -3206,6 +3704,596 @@ function showProfile() {
   `;
 
 }
+
+
+/* ========================================
+   PUBLISHER STUDIO
+======================================== */
+
+let studioVideoFile = null;
+let studioThumbnailFile = null;
+let studioType = "video";
+let studioVisibility = "public";
+
+function openStudio() {
+  if (!requireLogin("VYRO Studio")) return;
+
+  resetStudioForm();
+
+  document
+    .getElementById("studioModal")
+    .classList.remove("hidden");
+}
+
+function closeStudio() {
+  document
+    .getElementById("studioModal")
+    .classList.add("hidden");
+}
+
+function resetStudioForm() {
+  studioVideoFile = null;
+  studioThumbnailFile = null;
+  studioType = "video";
+  studioVisibility = "public";
+
+  const videoInput =
+    document.getElementById("studioVideoInput");
+
+  const thumbnailInput =
+    document.getElementById("studioThumbnailInput");
+
+  if (videoInput) videoInput.value = "";
+  if (thumbnailInput) thumbnailInput.value = "";
+
+  document.getElementById("studioTitle").value = "";
+  document.getElementById("studioDescription").value = "";
+
+  document.getElementById("studioVideoName").textContent = "";
+  document.getElementById("studioVideoMeta").textContent = "";
+  document.getElementById("studioVideoName").classList.add("hidden");
+  document.getElementById("studioVideoMeta").classList.add("hidden");
+
+  document.getElementById("studioThumbnailPreview").innerHTML = "🖼️";
+
+  setStudioType("video");
+  setStudioVisibility("public");
+
+  setStudioProgress(0, "", true);
+
+  document.getElementById("studioPublishButton").disabled = false;
+  document.getElementById("studioCancelButton").disabled = false;
+}
+
+function selectStudioVideo(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("video/")) {
+    showToast("Please choose a video file.");
+    return;
+  }
+
+  if (file.size > 500 * 1024 * 1024) {
+    showToast("Please choose a video smaller than 500MB.");
+    return;
+  }
+
+  studioVideoFile = file;
+
+  document.getElementById("studioVideoName").textContent =
+    file.name;
+
+  document.getElementById("studioVideoMeta").textContent =
+    `${formatFileSize(file.size)} · ${file.type || "video"}`;
+
+  document.getElementById("studioVideoName").classList.remove("hidden");
+  document.getElementById("studioVideoMeta").classList.remove("hidden");
+
+  const titleInput =
+    document.getElementById("studioTitle");
+
+  if (!titleInput.value.trim()) {
+    titleInput.value =
+      file.name
+        .replace(/\.[^/.]+$/, "")
+        .replace(/[_-]+/g, " ")
+        .trim();
+  }
+}
+
+function selectStudioThumbnail(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    showToast("Please choose an image for the thumbnail.");
+    event.target.value = "";
+    return;
+  }
+
+  if (file.size > 10 * 1024 * 1024) {
+    showToast("Please choose a thumbnail smaller than 10MB.");
+    event.target.value = "";
+    return;
+  }
+
+  studioThumbnailFile = file;
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    document.getElementById(
+      "studioThumbnailPreview"
+    ).innerHTML =
+      `<img src="${reader.result}" alt="Thumbnail preview">`;
+  };
+
+  reader.readAsDataURL(file);
+}
+
+function setStudioType(type) {
+  studioType = type;
+
+  document.getElementById("studioTypeVideo")
+    .classList.toggle("active", type === "video");
+
+  document.getElementById("studioTypeShort")
+    .classList.toggle("active", type === "short");
+}
+
+function setStudioVisibility(visibility) {
+  studioVisibility = visibility;
+
+  document.getElementById("studioVisibilityPublic")
+    .classList.toggle("active", visibility === "public");
+
+  document.getElementById("studioVisibilityUnlisted")
+    .classList.toggle("active", visibility === "unlisted");
+
+  document.getElementById("studioVisibilityMembership")
+    .classList.toggle("active", visibility === "membership");
+}
+
+function formatFileSize(bytes) {
+  if (!bytes) return "0 B";
+
+  const units = ["B", "KB", "MB", "GB"];
+  const index =
+    Math.min(
+      Math.floor(Math.log(bytes) / Math.log(1024)),
+      units.length - 1
+    );
+
+  return `${(bytes / Math.pow(1024,index)).toFixed(index ? 1 : 0)} ${units[index]}`;
+}
+
+function setStudioProgress(percent, textValue, hidden) {
+  const wrap =
+    document.getElementById("studioProgressWrap");
+
+  if (hidden) {
+    wrap.classList.add("hidden");
+    return;
+  }
+
+  wrap.classList.remove("hidden");
+
+  const safePercent =
+    Math.max(0, Math.min(100, percent));
+
+  document.getElementById("studioProgressBar")
+    .style.width = `${safePercent}%`;
+
+  document.getElementById("studioProgressPercent")
+    .textContent = `${Math.round(safePercent)}%`;
+
+  document.getElementById("studioProgressText")
+    .textContent = textValue || "Uploading...";
+}
+
+async function uploadStudioFile(bucket, path, file, progressStart, progressEnd) {
+  const {
+    data: sessionData,
+    error: sessionError
+  } = await supabaseClient.auth.getSession();
+
+  if (sessionError) throw sessionError;
+
+  const accessToken =
+    sessionData?.session?.access_token;
+
+  if (!accessToken) {
+    throw new Error("Your VYRO session has expired. Please sign in again.");
+  }
+
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+
+    xhr.open(
+      "POST",
+      `${SUPABASE_URL}/storage/v1/object/${bucket}/${encodeURIComponent(path).replace(/%2F/g, "/")}`
+    );
+
+    xhr.setRequestHeader(
+      "Authorization",
+      `Bearer ${accessToken}`
+    );
+
+    xhr.setRequestHeader(
+      "apikey",
+      SUPABASE_KEY
+    );
+
+    xhr.setRequestHeader(
+      "x-upsert",
+      "true"
+    );
+
+    xhr.setRequestHeader(
+      "Content-Type",
+      file.type || "application/octet-stream"
+    );
+
+    xhr.upload.onprogress = event => {
+      if (!event.lengthComputable) return;
+
+      const localPercent =
+        (event.loaded / event.total) * 100;
+
+      const overallPercent =
+        progressStart +
+        ((progressEnd - progressStart) * localPercent / 100);
+
+      setStudioProgress(
+        overallPercent,
+        bucket === VIDEO_BUCKET
+          ? "Uploading video..."
+          : "Uploading thumbnail...",
+        false
+      );
+    };
+
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve();
+        return;
+      }
+
+      let message =
+        `Upload failed (${xhr.status}).`;
+
+      try {
+        const body =
+          JSON.parse(xhr.responseText);
+
+        if (body?.message) {
+          message = body.message;
+        }
+      } catch {}
+
+      reject(new Error(message));
+    };
+
+    xhr.onerror = () => {
+      reject(
+        new Error("Network error while uploading.")
+      );
+    };
+
+    xhr.onabort = () => {
+      reject(
+        new Error("Upload was cancelled.")
+      );
+    };
+
+    xhr.send(file);
+  });
+}
+
+async function publishStudioVideo() {
+  if (!requireLogin("publishing")) return;
+
+  if (!studioVideoFile) {
+    showToast("Choose a video first.");
+    return;
+  }
+
+  const title =
+    document.getElementById("studioTitle")
+      .value.trim();
+
+  const description =
+    document.getElementById("studioDescription")
+      .value.trim();
+
+  if (!title) {
+    showToast("Please enter a title.");
+    return;
+  }
+
+  const publishButton =
+    document.getElementById("studioPublishButton");
+
+  const cancelButton =
+    document.getElementById("studioCancelButton");
+
+  publishButton.disabled = true;
+  cancelButton.disabled = true;
+
+  try {
+    setStudioProgress(
+      0,
+      "Preparing upload...",
+      false
+    );
+
+    const extension =
+      (
+        studioVideoFile.name
+          .split(".")
+          .pop() ||
+        "mp4"
+      )
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+
+    const unique =
+      `${Date.now()}-${Math.random().toString(36).slice(2,10)}`;
+
+    const videoPath =
+      `${currentUser.id}/${unique}.${extension}`;
+
+    await uploadStudioFile(
+      VIDEO_BUCKET,
+      videoPath,
+      studioVideoFile,
+      0,
+      studioThumbnailFile ? 75 : 92
+    );
+
+    let thumbnailUrl = null;
+
+    if (studioThumbnailFile) {
+      const thumbExtension =
+        (
+          studioThumbnailFile.name
+            .split(".")
+            .pop() ||
+          "jpg"
+        )
+          .toLowerCase()
+          .replace(/[^a-z0-9]/g, "");
+
+      const thumbnailPath =
+        `${currentUser.id}/${unique}.${thumbExtension}`;
+
+      await uploadStudioFile(
+        THUMBNAIL_BUCKET,
+        thumbnailPath,
+        studioThumbnailFile,
+        75,
+        92
+      );
+
+      const {
+        data: thumbnailPublic
+      } =
+        supabaseClient.storage
+          .from(THUMBNAIL_BUCKET)
+          .getPublicUrl(thumbnailPath);
+
+      thumbnailUrl =
+        thumbnailPublic?.publicUrl || null;
+    }
+
+    setStudioProgress(
+      95,
+      "Saving your VYRO video...",
+      false
+    );
+
+    const {
+      data: videoPublic
+    } =
+      supabaseClient.storage
+        .from(VIDEO_BUCKET)
+        .getPublicUrl(videoPath);
+
+    const videoUrl =
+      videoPublic?.publicUrl;
+
+    if (!videoUrl) {
+      throw new Error("Could not create the video URL.");
+    }
+
+    const {
+      error: databaseError
+    } =
+      await supabaseClient
+        .from("videos")
+        .insert({
+          user_id: currentUser.id,
+          title,
+          description,
+          video_url: videoUrl,
+          thumbnail_url: thumbnailUrl,
+          video_type: studioType,
+          visibility: studioVisibility
+        });
+
+    if (databaseError) {
+      throw databaseError;
+    }
+
+    setStudioProgress(
+      100,
+      "Published successfully!",
+      false
+    );
+
+    showToast(
+      "🎉 Your video has been published to VYRO!"
+    );
+
+    setTimeout(() => {
+      closeStudio();
+      showHome();
+    }, 700);
+
+  } catch (error) {
+    console.error("VYRO Studio upload error:", error);
+
+    showToast(
+      error?.message ||
+      "Something went wrong while publishing."
+    );
+
+    publishButton.disabled = false;
+    cancelButton.disabled = false;
+  }
+}
+
+function showStudio() {
+  openStudio();
+}
+
+function handleStudioDrop(event) {
+  event.preventDefault();
+
+  const dropzone =
+    document.getElementById("studioDropzone");
+
+  dropzone.classList.remove("dragover");
+
+  const file =
+    event.dataTransfer?.files?.[0];
+
+  if (!file) return;
+
+  const input =
+    document.getElementById("studioVideoInput");
+
+  try {
+    const transfer =
+      new DataTransfer();
+
+    transfer.items.add(file);
+    input.files = transfer.files;
+
+    selectStudioVideo({
+      target: input
+    });
+  } catch {
+    showToast("Please use Choose a video if drag and drop is unavailable.");
+  }
+}
+
+function initStudioDropzone() {
+  const dropzone =
+    document.getElementById("studioDropzone");
+
+  if (!dropzone) return;
+
+  dropzone.addEventListener(
+    "dragover",
+    event => {
+      event.preventDefault();
+      dropzone.classList.add("dragover");
+    }
+  );
+
+  dropzone.addEventListener(
+    "dragleave",
+    () => {
+      dropzone.classList.remove("dragover");
+    }
+  );
+
+  dropzone.addEventListener(
+    "drop",
+    handleStudioDrop
+  );
+}
+
+document.addEventListener(
+  "DOMContentLoaded",
+  initStudioDropzone
+);
+
+/* ========================================
+   LOAD PUBLISHED VIDEOS
+======================================== */
+
+async function loadPublishedVideos() {
+  const grid =
+    document.getElementById("publishedVideoGrid");
+
+  if (!grid) return;
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("videos")
+      .select("*")
+      .eq("visibility", "public")
+      .order("created_at", { ascending: false })
+      .limit(24);
+
+  if (error) {
+    console.error("Could not load VYRO videos:", error);
+    return;
+  }
+
+  if (!data?.length) {
+    return;
+  }
+
+  grid.innerHTML =
+    data.map(video => {
+      const thumbnail =
+        video.thumbnail_url
+          ? `<img src="${escapeHTML(video.thumbnail_url)}" alt="">`
+          : `<span style="font-size:38px;">🎬</span>`;
+
+      return `
+        <div
+          class="video-card"
+          onclick="openPublishedVideo('${escapeHTML(video.id)}')"
+        >
+          <div class="thumbnail">
+            ${thumbnail}
+          </div>
+
+          <div class="video-info">
+            <div class="avatar">
+              ${getInitials("VYRO")}
+            </div>
+
+            <div>
+              <div class="video-title">
+                ${escapeHTML(video.title)}
+              </div>
+
+              <div class="video-meta">
+                ${video.video_type === "short" ? "Short" : "Video"}<br>
+                ${Number(video.views || 0).toLocaleString()} views
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+}
+
+function openPublishedVideo(id) {
+  showToast(
+    "Video player page is the next VYRO feature."
+  );
+}
+
 
 /* ========================================
    SETTINGS
