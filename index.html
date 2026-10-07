@@ -1,753 +1,1589 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VYRO</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg: #f7f8ff;
-      --card: #ffffff;
-      --text: #151526;
-      --muted: #74748b;
-      --border: #e7e7f1;
-      --purple: #7657ff;
-      --blue: #3987ff;
-      --pink: #ff4fa3;
-      --cyan: #20cfff;
-      --green: #24c98a;
-      --danger: #ff4d67;
-      --shadow: 0 12px 35px rgba(52, 39, 120, 0.10);
-    }
-
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    button,
-    input,
-    textarea {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    /* HEADER */
-
-    header {
-      height: 72px;
-      background: rgba(255,255,255,.94);
-      backdrop-filter: blur(15px);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 22px;
-      padding: 0 24px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .logo {
-      font-size: 29px;
-      font-weight: 900;
-      letter-spacing: -1.5px;
-      background: linear-gradient(100deg, #387cff, #7657ff, #ff4fa3);
-      -webkit-background-clip: text;
-      color: transparent;
-      cursor: pointer;
-    }
-
-    .search {
-      flex: 1;
-      max-width: 650px;
-      margin: auto;
-      position: relative;
-    }
-
-    .search input {
-      width: 100%;
-      border: 1px solid var(--border);
-      background: #f5f5fb;
-      padding: 13px 18px;
-      border-radius: 18px;
-      outline: none;
-      transition: .2s;
-    }
-
-    .search input:focus {
-      background: white;
-      border-color: var(--purple);
-      box-shadow: 0 0 0 4px rgba(118,87,255,.08);
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .icon-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      border: 0;
-      background: #f1f1fa;
-      font-size: 18px;
-    }
-
-    .account-button {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      border: 0;
-      background: #f1f1fa;
-      padding: 5px 12px 5px 5px;
-      border-radius: 24px;
-      font-weight: 700;
-    }
-
-    .avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      object-fit: cover;
-      display: block;
-      background: linear-gradient(135deg, #3987ff, #7657ff, #ff4fa3);
-      color: white;
-      font-weight: 900;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-
-    .avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* LAYOUT */
-
-    .layout {
-      display: flex;
-      min-height: calc(100vh - 72px);
-    }
-
-    aside {
-      width: 230px;
-      padding: 22px 14px;
-      border-right: 1px solid var(--border);
-      background: white;
-      flex-shrink: 0;
-    }
-
-    .nav-section {
-      margin-bottom: 25px;
-    }
-
-    .nav-title {
-      color: #9999ac;
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      padding: 0 12px 8px;
-    }
-
-    .nav-btn {
-      width: 100%;
-      border: 0;
-      background: transparent;
-      padding: 12px;
-      border-radius: 12px;
-      text-align: left;
-      font-weight: 700;
-      color: #4b4b62;
-      margin-bottom: 3px;
-    }
-
-    .nav-btn:hover,
-    .nav-btn.active {
-      background: #f0edff;
-      color: var(--purple);
-    }
-
-    main {
-      flex: 1;
-      padding: 30px;
-      max-width: 1500px;
-      margin: auto;
-      width: 100%;
-    }
-
-    /* HERO */
-
-    .hero {
-      background:
-        radial-gradient(circle at 90% 10%, rgba(255,255,255,.35), transparent 25%),
-        linear-gradient(120deg, #4285ff, #7657ff 48%, #e44bba);
-      color: white;
-      border-radius: 28px;
-      padding: 42px;
-      min-height: 260px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-
-    .hero h1 {
-      font-size: clamp(34px, 5vw, 58px);
-      margin-bottom: 12px;
-    }
-
-    .hero p {
-      max-width: 620px;
-      opacity: .92;
-      font-size: 17px;
-      line-height: 1.6;
-    }
-
-    .hero-button {
-      margin-top: 22px;
-      border: 0;
-      background: white;
-      color: #6250e8;
-      padding: 13px 20px;
-      border-radius: 14px;
-      font-weight: 800;
-    }
-
-    .hero-orb {
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.12);
-      border: 30px solid rgba(255,255,255,.08);
-      flex-shrink: 0;
-    }
-
-    /* CATEGORIES */
-
-    .categories {
-      display: flex;
-      gap: 9px;
-      overflow-x: auto;
-      padding: 24px 0;
-    }
-
-    .category {
-      white-space: nowrap;
-      border: 1px solid var(--border);
-      background: white;
-      padding: 9px 15px;
-      border-radius: 999px;
-      font-weight: 700;
-    }
-
-    .category.active {
-      background: var(--text);
-      color: white;
-    }
-
-    /* VIDEO CARDS */
-
-    .section-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 12px 0 18px;
-    }
-
-    .section-heading h2 {
-      font-size: 23px;
-    }
-
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 22px;
-    }
-
-    .video-card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      overflow: hidden;
-      transition: .2s;
-      cursor: pointer;
-    }
-
-    .video-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow);
-    }
-
-    .thumbnail {
-      aspect-ratio: 16/9;
-      background: linear-gradient(135deg, #4385ff, #7657ff, #ff4fa3);
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 38px;
-    }
-
-    .thumbnail span {
-      font-size: 15px;
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      background: rgba(0,0,0,.75);
-      padding: 4px 7px;
-      border-radius: 6px;
-    }
-
-    .video-info {
-      padding: 13px;
-      display: flex;
-      gap: 10px;
-    }
-
-    .video-title {
-      font-weight: 800;
-      line-height: 1.35;
-      margin-bottom: 6px;
-    }
-
-    .video-meta {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    /* SHORTS */
-
-    .shorts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
-      gap: 18px;
-    }
-
-    .short-card {
-      aspect-ratio: 9/15;
-      border-radius: 18px;
-      overflow: hidden;
-      background: linear-gradient(145deg, #7657ff, #ff4fa3);
-      color: white;
-      padding: 15px;
-      display: flex;
-      align-items: flex-end;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    /* MODALS */
-
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(12,12,25,.58);
-      backdrop-filter: blur(7px);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal {
-      background: white;
-      width: min(500px, 100%);
-      max-height: 92vh;
-      overflow-y: auto;
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 30px 90px rgba(0,0,0,.25);
-    }
-
-    .modal.large {
-      width: min(720px, 100%);
-    }
-
-    .modal h2 {
-      margin-bottom: 7px;
-    }
-
-    .modal-subtitle {
-      color: var(--muted);
-      margin-bottom: 22px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 13px;
-      font-weight: 800;
-      margin-bottom: 7px;
-    }
-
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      outline: none;
-      background: #fafaff;
-    }
-
-    .form-group textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus {
-      border-color: var(--purple);
-      background: white;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      margin-top: 22px;
-    }
-
-    .primary {
-      border: 0;
-      color: white;
-      background: linear-gradient(100deg, #3987ff, #7657ff);
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-weight: 800;
-    }
-
-    .secondary {
-      border: 1px solid var(--border);
-      background: white;
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-weight: 800;
-    }
-
-    .danger {
-      border: 0;
-      color: white;
-      background: var(--danger);
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-weight: 800;
-    }
-
-    /* ACCOUNT */
-
-    .profile-header {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 30px;
-      display: flex;
-      gap: 22px;
-      align-items: center;
-      box-shadow: var(--shadow);
-    }
-
-    .profile-large-avatar {
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      overflow: hidden;
-      flex-shrink: 0;
-      background: linear-gradient(135deg,#3987ff,#7657ff,#ff4fa3);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 38px;
-      font-weight: 900;
-    }
-
-    .profile-large-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .profile-name {
-      font-size: 29px;
-      font-weight: 900;
-      margin-bottom: 5px;
-    }
-
-    .profile-username {
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    .settings-card {
-      margin-top: 20px;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 23px;
-    }
-
-    .settings-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 17px 0;
-      border-bottom: 1px solid var(--border);
-      gap: 20px;
-    }
-
-    .settings-row:last-child {
-      border-bottom: 0;
-    }
-
-    .settings-row h3 {
-      margin-bottom: 4px;
-    }
-
-    .settings-row p {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    /* PFP EDITOR */
-
-    .pfp-editor {
-      text-align: center;
-    }
-
-    .crop-stage {
-      width: 320px;
-      height: 320px;
-      margin: 20px auto;
-      border-radius: 50%;
-      overflow: hidden;
-      position: relative;
-      background:
-        linear-gradient(45deg,#ddd 25%,transparent 25%),
-        linear-gradient(-45deg,#ddd 25%,transparent 25%),
-        linear-gradient(45deg,transparent 75%,#ddd 75%),
-        linear-gradient(-45deg,transparent 75%,#ddd 75%);
-      background-size: 28px 28px;
-      background-position: 0 0,0 14px,14px -14px,-14px 0;
-      touch-action: none;
-      border: 5px solid white;
-      box-shadow: 0 0 0 1px var(--border), var(--shadow);
-    }
-
-    #cropCanvas {
-      width: 320px;
-      height: 320px;
-      display: block;
-      cursor: grab;
-      touch-action: none;
-    }
-
-    #cropCanvas:active {
-      cursor: grabbing;
-    }
-
-    .crop-help {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 17px;
-    }
-
-    .zoom-control {
-      max-width: 320px;
-      margin: auto;
-      text-align: left;
-    }
-
-    .zoom-control label {
-      font-size: 13px;
-      font-weight: 800;
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .zoom-control input {
-      width: 100%;
-    }
-
-    .pfp-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    /* ACCOUNT DROPDOWN */
-
-    .account-dropdown {
-      position: fixed;
-      top: 66px;
-      right: 20px;
-      width: 280px;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      z-index: 200;
-      padding: 10px;
-    }
-
-    .dropdown-user {
-      padding: 13px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 6px;
-    }
-
-    .dropdown-user strong {
-      display: block;
-      margin-bottom: 3px;
-    }
-
-    .dropdown-user span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .dropdown-btn {
-      width: 100%;
-      border: 0;
-      background: transparent;
-      text-align: left;
-      padding: 12px;
-      border-radius: 10px;
-      font-weight: 700;
-    }
-
-    .dropdown-btn:hover {
-      background: #f3f2ff;
-    }
-
-    /* TOAST */
-
-    .toast {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      background: #171727;
-      color: white;
-      padding: 14px 18px;
-      border-radius: 13px;
-      box-shadow: var(--shadow);
-      z-index: 2000;
-      max-width: 350px;
-    }
-
-    footer {
-      margin-top: 60px;
-      padding: 30px 0;
-      color: var(--muted);
-      text-align: center;
-      border-top: 1px solid var(--border);
-    }
-
-    @media(max-width: 850px) {
-      aside {
-        width: 75px;
-      }
-
-      .nav-title {
-        display: none;
-      }
-
-      .nav-btn {
-        text-align: center;
-        font-size: 0;
-      }
-
-      .nav-btn::first-letter {
-        font-size: 20px;
-      }
-
-      main {
-        padding: 18px;
-      }
-
-      .hero {
-        padding: 28px;
-      }
-
-      .hero-orb {
-        display: none;
-      }
-    }
-
-    @media(max-width: 650px) {
-      header {
-        padding: 0 12px;
-        gap: 10px;
-      }
-
-      .logo {
-        font-size: 24px;
-      }
-
-      .search {
-        display: none;
-      }
-
-      .account-button span {
-        display: none;
-      }
-
-      aside {
-        display: none;
-      }
-
-      .profile-header {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .crop-stage,
-      #cropCanvas {
-        width: 270px;
-        height: 270px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VYRO — Watch. Create. Share.</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #f7f7ff;
+  --card: #ffffff;
+  --text: #151525;
+  --muted: #77778d;
+  --border: #e8e7f3;
+
+  --blue: #347cff;
+  --cyan: #20d9ff;
+  --purple: #7654ff;
+  --violet: #9a48ff;
+  --pink: #ff42a1;
+  --orange: #ff8a35;
+  --yellow: #ffd84d;
+  --green: #22ce8b;
+
+  --gradient: linear-gradient(
+    110deg,
+    #287dff 0%,
+    #7654ff 42%,
+    #a34cff 65%,
+    #ff42a1 100%
+  );
+
+  --shadow:
+    0 15px 45px rgba(67, 51, 160, .12);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family:
+    Inter,
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(52,124,255,.08),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 90% 20%,
+      rgba(255,66,161,.08),
+      transparent 25%
+    ),
+    var(--bg);
+
+  color: var(--text);
+  min-height: 100vh;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+  height: 74px;
+
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+
+  gap: 20px;
+  padding: 0 24px;
+
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(20px);
+
+  border-bottom: 1px solid rgba(220,220,240,.8);
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: 950;
+  letter-spacing: -1.8px;
+
+  background:
+    linear-gradient(
+      100deg,
+      #287dff,
+      #7654ff,
+      #ff42a1
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+
+  cursor: pointer;
+}
+
+.search {
+  flex: 1;
+  max-width: 650px;
+  margin: auto;
+}
+
+.search input {
+  width: 100%;
+
+  border: 2px solid transparent;
+
+  background:
+    linear-gradient(#f4f4fb,#f4f4fb) padding-box,
+    linear-gradient(
+      90deg,
+      rgba(52,124,255,.25),
+      rgba(118,84,255,.25),
+      rgba(255,66,161,.25)
+    ) border-box;
+
+  padding: 13px 18px;
+  border-radius: 18px;
+
+  outline: none;
+
+  transition: .2s;
+}
+
+.search input:focus {
+  background:
+    linear-gradient(white,white) padding-box,
+    linear-gradient(
+      90deg,
+      #347cff,
+      #7654ff,
+      #ff42a1
+    ) border-box;
+
+  box-shadow:
+    0 0 0 5px rgba(118,84,255,.08);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.icon-btn {
+  width: 43px;
+  height: 43px;
+
+  border: 0;
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #edf4ff,
+      #f4edff,
+      #fff0f8
+    );
+
+  font-size: 18px;
+
+  transition: .2s;
+}
+
+.icon-btn:hover {
+  transform: translateY(-2px);
+}
+
+.primary {
+  border: 0;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      110deg,
+      #347cff,
+      #7654ff,
+      #ff42a1
+    );
+
+  padding: 12px 19px;
+
+  border-radius: 13px;
+
+  font-weight: 850;
+
+  box-shadow:
+    0 7px 20px rgba(118,84,255,.22);
+
+  transition: .2s;
+}
+
+.primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 11px 27px rgba(118,84,255,.30);
+}
+
+.secondary {
+  border: 1px solid var(--border);
+
+  background: white;
+
+  padding: 12px 18px;
+
+  border-radius: 13px;
+
+  font-weight: 800;
+
+  transition: .2s;
+}
+
+.secondary:hover {
+  border-color: #b9afff;
+  background: #faf9ff;
+}
+
+.account-button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  border: 0;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eef5ff,
+      #f3edff,
+      #fff0f8
+    );
+
+  padding: 5px 13px 5px 5px;
+
+  border-radius: 25px;
+
+  font-weight: 800;
+}
+
+.avatar {
+  width: 37px;
+  height: 37px;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+
+  font-weight: 900;
+
+  background:
+    linear-gradient(
+      135deg,
+      #20d9ff,
+      #347cff,
+      #7654ff,
+      #ff42a1
+    );
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.layout {
+  display: flex;
+  min-height: calc(100vh - 74px);
+}
+
+aside {
+  width: 235px;
+
+  background: rgba(255,255,255,.94);
+
+  border-right: 1px solid var(--border);
+
+  padding: 23px 14px;
+
+  flex-shrink: 0;
+}
+
+.nav-section {
+  margin-bottom: 27px;
+}
+
+.nav-title {
+  color: #9999ad;
+
+  font-size: 11px;
+
+  font-weight: 900;
+
+  letter-spacing: .8px;
+
+  text-transform: uppercase;
+
+  padding: 0 12px 9px;
+}
+
+.nav-btn {
+  width: 100%;
+
+  border: 0;
+
+  background: transparent;
+
+  padding: 12px;
+
+  border-radius: 13px;
+
+  text-align: left;
+
+  font-weight: 750;
+
+  color: #505064;
+
+  margin-bottom: 4px;
+
+  transition: .2s;
+}
+
+.nav-btn:hover {
+  background:
+    linear-gradient(
+      90deg,
+      #f0f5ff,
+      #f5f0ff,
+      #fff0f8
+    );
+
+  color: #6b50ef;
+
+  transform: translateX(2px);
+}
+
+.nav-btn.active {
+  color: white;
+
+  background:
+    linear-gradient(
+      110deg,
+      #347cff,
+      #7654ff,
+      #a34cff
+    );
+
+  box-shadow:
+    0 7px 20px rgba(118,84,255,.20);
+}
+
+main {
+  flex: 1;
+
+  width: 100%;
+
+  max-width: 1500px;
+
+  margin: auto;
+
+  padding: 30px;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+  position: relative;
+
+  min-height: 285px;
+
+  overflow: hidden;
+
+  border-radius: 30px;
+
+  padding: 43px;
+
+  color: white;
+
+  background:
+    radial-gradient(
+      circle at 90% 15%,
+      rgba(32,217,255,.55),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 75% 90%,
+      rgba(255,66,161,.55),
+      transparent 30%
+    ),
+    linear-gradient(
+      120deg,
+      #247eff,
+      #6b51ff 45%,
+      #a548ff 67%,
+      #ff429d
+    );
+
+  box-shadow:
+    0 20px 55px rgba(86,64,190,.24);
+}
+
+.hero::before {
+  content: "";
+
+  position: absolute;
+
+  width: 360px;
+  height: 360px;
+
+  right: -100px;
+  top: -170px;
+
+  border-radius: 50%;
+
+  border: 65px solid rgba(255,255,255,.10);
+}
+
+.hero::after {
+  content: "";
+
+  position: absolute;
+
+  width: 220px;
+  height: 220px;
+
+  right: 220px;
+  bottom: -150px;
+
+  border-radius: 50%;
+
+  background: rgba(32,217,255,.15);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero h1 {
+  font-size: clamp(37px,5vw,60px);
+
+  line-height: 1;
+
+  letter-spacing: -2px;
+
+  margin-bottom: 16px;
+}
+
+.hero p {
+  max-width: 650px;
+
+  font-size: 17px;
+
+  line-height: 1.65;
+
+  opacity: .94;
+}
+
+.hero-button {
+  margin-top: 24px;
+
+  border: 0;
+
+  background: white;
+
+  color: #624fe9;
+
+  padding: 14px 21px;
+
+  border-radius: 14px;
+
+  font-weight: 900;
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.13);
+}
+
+.hero-button:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================
+   CATEGORY
+========================= */
+
+.categories {
+  display: flex;
+
+  gap: 9px;
+
+  overflow-x: auto;
+
+  padding: 24px 0;
+}
+
+.category {
+  white-space: nowrap;
+
+  border: 1px solid var(--border);
+
+  background: white;
+
+  padding: 9px 16px;
+
+  border-radius: 999px;
+
+  font-weight: 750;
+}
+
+.category:hover {
+  border-color: #b7aaff;
+}
+
+.category.active {
+  color: white;
+
+  border-color: transparent;
+
+  background:
+    linear-gradient(
+      100deg,
+      #347cff,
+      #7654ff,
+      #ff42a1
+    );
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin: 13px 0 18px;
+}
+
+.section-heading h2 {
+  font-size: 24px;
+}
+
+.video-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill,minmax(250px,1fr));
+
+  gap: 22px;
+}
+
+.video-card {
+  background: white;
+
+  border: 1px solid var(--border);
+
+  border-radius: 19px;
+
+  overflow: hidden;
+
+  cursor: pointer;
+
+  transition: .22s;
+}
+
+.video-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow: var(--shadow);
+}
+
+.thumbnail {
+  aspect-ratio: 16/9;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+
+  font-size: 39px;
+
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(32,217,255,.7),
+      transparent 25%
+    ),
+    linear-gradient(
+      135deg,
+      #347cff,
+      #7654ff,
+      #ff42a1
+    );
+}
+
+.thumbnail span {
+  position: absolute;
+
+  right: 10px;
+  bottom: 10px;
+
+  background: rgba(0,0,0,.7);
+
+  padding: 4px 7px;
+
+  border-radius: 6px;
+
+  font-size: 13px;
+}
+
+.video-info {
+  padding: 14px;
+
+  display: flex;
+
+  gap: 10px;
+}
+
+.video-title {
+  font-weight: 850;
+
+  line-height: 1.35;
+
+  margin-bottom: 6px;
+}
+
+.video-meta {
+  color: var(--muted);
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+/* =========================
+   SHORTS
+========================= */
+
+.shorts-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill,minmax(165px,1fr));
+
+  gap: 18px;
+}
+
+.short-card {
+  aspect-ratio: 9/15;
+
+  position: relative;
+
+  overflow: hidden;
+
+  border-radius: 20px;
+
+  padding: 17px;
+
+  color: white;
+
+  display: flex;
+  align-items: flex-end;
+
+  font-weight: 850;
+
+  cursor: pointer;
+
+  background:
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(32,217,255,.55),
+      transparent 27%
+    ),
+    linear-gradient(
+      145deg,
+      #347cff,
+      #7654ff 45%,
+      #ff42a1
+    );
+
+  box-shadow:
+    0 12px 30px rgba(75,58,180,.15);
+
+  transition: .2s;
+}
+
+.short-card:nth-child(2n) {
+  background:
+    radial-gradient(
+      circle at 70% 20%,
+      rgba(255,216,77,.45),
+      transparent 27%
+    ),
+    linear-gradient(
+      145deg,
+      #ff6b35,
+      #ff42a1,
+      #7654ff
+    );
+}
+
+.short-card:nth-child(3n) {
+  background:
+    radial-gradient(
+      circle at 40% 15%,
+      rgba(32,217,255,.55),
+      transparent 28%
+    ),
+    linear-gradient(
+      145deg,
+      #16c7b5,
+      #347cff,
+      #7654ff
+    );
+}
+
+.short-card:hover {
+  transform: translateY(-5px);
+}
+
+/* =========================
+   AUTH SCREEN
+========================= */
+
+.auth-background {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 999;
+
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 25px;
+
+  background:
+    radial-gradient(
+      circle at 10% 15%,
+      rgba(32,217,255,.9),
+      transparent 27%
+    ),
+    radial-gradient(
+      circle at 88% 15%,
+      rgba(255,66,161,.8),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 75% 90%,
+      rgba(255,138,53,.65),
+      transparent 30%
+    ),
+    linear-gradient(
+      125deg,
+      #287dff,
+      #7654ff 45%,
+      #a34cff 65%,
+      #ff42a1
+    );
+}
+
+.auth-background::before,
+.auth-background::after {
+  content: "";
+
+  position: absolute;
+
+  border-radius: 50%;
+
+  border: 45px solid rgba(255,255,255,.09);
+}
+
+.auth-background::before {
+  width: 420px;
+  height: 420px;
+
+  left: -130px;
+  top: -130px;
+}
+
+.auth-background::after {
+  width: 330px;
+  height: 330px;
+
+  right: -100px;
+  bottom: -110px;
+}
+
+.auth-card {
+  position: relative;
+
+  z-index: 2;
+
+  width: min(480px,100%);
+
+  padding: 36px;
+
+  border-radius: 29px;
+
+  background:
+    rgba(255,255,255,.96);
+
+  backdrop-filter: blur(25px);
+
+  box-shadow:
+    0 35px 100px rgba(23,16,90,.30);
+
+  border: 1px solid rgba(255,255,255,.7);
+}
+
+.auth-logo {
+  text-align: center;
+
+  font-size: 46px;
+
+  font-weight: 950;
+
+  letter-spacing: -3px;
+
+  background:
+    linear-gradient(
+      100deg,
+      #287dff,
+      #7654ff,
+      #ff42a1
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+
+  margin-bottom: 7px;
+}
+
+.auth-card h2 {
+  text-align: center;
+
+  font-size: 27px;
+
+  margin-bottom: 7px;
+}
+
+.auth-card > p {
+  text-align: center;
+
+  color: var(--muted);
+
+  margin-bottom: 26px;
+}
+
+.auth-form-group {
+  margin-bottom: 16px;
+}
+
+.auth-form-group label {
+  display: block;
+
+  font-size: 13px;
+
+  font-weight: 850;
+
+  margin-bottom: 7px;
+}
+
+.auth-form-group input {
+  width: 100%;
+
+  padding: 14px 15px;
+
+  border-radius: 13px;
+
+  border: 2px solid #e8e7f3;
+
+  outline: none;
+
+  background: #fafaff;
+
+  transition: .2s;
+}
+
+.auth-form-group input:focus {
+  background: white;
+
+  border-color: #7654ff;
+
+  box-shadow:
+    0 0 0 5px rgba(118,84,255,.09);
+}
+
+.auth-submit {
+  width: 100%;
+
+  margin-top: 7px;
+
+  padding: 14px;
+
+  border: 0;
+
+  border-radius: 14px;
+
+  color: white;
+
+  font-weight: 900;
+
+  background:
+    linear-gradient(
+      100deg,
+      #287dff,
+      #7654ff,
+      #a34cff,
+      #ff42a1
+    );
+
+  box-shadow:
+    0 12px 27px rgba(118,84,255,.25);
+}
+
+.auth-links {
+  text-align: center;
+
+  margin-top: 20px;
+
+  color: var(--muted);
+
+  font-size: 14px;
+}
+
+.auth-link {
+  border: 0;
+
+  background: transparent;
+
+  color: #7654ff;
+
+  font-weight: 850;
+}
+
+/* =========================
+   MODALS
+========================= */
+
+.modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background:
+    rgba(13,12,35,.62);
+
+  backdrop-filter: blur(9px);
+}
+
+.modal {
+  width: min(500px,100%);
+
+  max-height: 92vh;
+
+  overflow-y: auto;
+
+  background: white;
+
+  border-radius: 25px;
+
+  padding: 29px;
+
+  box-shadow:
+    0 30px 100px rgba(0,0,0,.28);
+}
+
+.modal.large {
+  width: min(720px,100%);
+}
+
+.modal h2 {
+  margin-bottom: 7px;
+}
+
+.modal-subtitle {
+  color: var(--muted);
+
+  margin-bottom: 21px;
+
+  line-height: 1.5;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+
+  font-size: 13px;
+
+  font-weight: 850;
+
+  margin-bottom: 7px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+
+  padding: 12px;
+
+  border-radius: 12px;
+
+  border: 1px solid var(--border);
+
+  background: #fafaff;
+
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #7654ff;
+
+  box-shadow:
+    0 0 0 4px rgba(118,84,255,.07);
+}
+
+.form-group textarea {
+  min-height: 90px;
+
+  resize: vertical;
+}
+
+.modal-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 22px;
+}
+
+.danger {
+  border: 0;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      100deg,
+      #ff405f,
+      #ff6a35
+    );
+
+  padding: 12px 18px;
+
+  border-radius: 12px;
+
+  font-weight: 850;
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile-header {
+  position: relative;
+
+  overflow: hidden;
+
+  background: white;
+
+  border-radius: 25px;
+
+  padding: 30px;
+
+  display: flex;
+
+  gap: 22px;
+
+  align-items: center;
+
+  border: 1px solid var(--border);
+
+  box-shadow: var(--shadow);
+}
+
+.profile-header::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  width: 100%;
+  height: 7px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #20d9ff,
+      #347cff,
+      #7654ff,
+      #ff42a1,
+      #ff8a35
+    );
+}
+
+.profile-large-avatar {
+  width: 115px;
+  height: 115px;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+
+  font-size: 39px;
+
+  font-weight: 950;
+
+  background:
+    linear-gradient(
+      135deg,
+      #20d9ff,
+      #347cff,
+      #7654ff,
+      #ff42a1
+    );
+
+  box-shadow:
+    0 8px 25px rgba(118,84,255,.22);
+}
+
+.profile-large-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-name {
+  font-size: 30px;
+
+  font-weight: 950;
+
+  margin-bottom: 4px;
+}
+
+.profile-username {
+  color: #7654ff;
+
+  font-weight: 750;
+
+  margin-bottom: 10px;
+}
+
+.settings-card {
+  margin-top: 21px;
+
+  padding: 23px;
+
+  background: white;
+
+  border: 1px solid var(--border);
+
+  border-radius: 20px;
+}
+
+.settings-row {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 17px 0;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-row:last-child {
+  border-bottom: 0;
+}
+
+.settings-row h3 {
+  margin-bottom: 4px;
+}
+
+.settings-row p {
+  color: var(--muted);
+
+  font-size: 14px;
+}
+
+/* =========================
+   PFP EDITOR
+========================= */
+
+.pfp-editor {
+  text-align: center;
+}
+
+.crop-stage {
+  width: 320px;
+  height: 320px;
+
+  margin: 20px auto;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(45deg,#ddd 25%,transparent 25%),
+    linear-gradient(-45deg,#ddd 25%,transparent 25%),
+    linear-gradient(45deg,transparent 75%,#ddd 75%),
+    linear-gradient(-45deg,transparent 75%,#ddd 75%);
+
+  background-size: 28px 28px;
+
+  background-position:
+    0 0,
+    0 14px,
+    14px -14px,
+    -14px 0;
+
+  border: 5px solid white;
+
+  box-shadow:
+    0 0 0 1px var(--border),
+    var(--shadow);
+
+  touch-action: none;
+}
+
+#cropCanvas {
+  width: 320px;
+  height: 320px;
+
+  display: block;
+
+  cursor: grab;
+
+  touch-action: none;
+}
+
+#cropCanvas:active {
+  cursor: grabbing;
+}
+
+.crop-help {
+  color: var(--muted);
+
+  font-size: 13px;
+
+  margin-bottom: 17px;
+}
+
+.zoom-control {
+  max-width: 320px;
+
+  margin: auto;
+
+  text-align: left;
+}
+
+.zoom-control label {
+  display: block;
+
+  font-size: 13px;
+
+  font-weight: 850;
+
+  margin-bottom: 6px;
+}
+
+.zoom-control input {
+  width: 100%;
+
+  accent-color: #7654ff;
+}
+
+.pfp-actions {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 9px;
+
+  justify-content: center;
+
+  margin-top: 20px;
+}
+
+/* =========================
+   ACCOUNT MENU
+========================= */
+
+.account-dropdown {
+  position: fixed;
+
+  top: 66px;
+
+  right: 20px;
+
+  z-index: 200;
+
+  width: 285px;
+
+  background: white;
+
+  border: 1px solid var(--border);
+
+  border-radius: 19px;
+
+  box-shadow: var(--shadow);
+
+  padding: 10px;
+}
+
+.dropdown-user {
+  padding: 13px;
+
+  border-bottom: 1px solid var(--border);
+
+  margin-bottom: 6px;
+}
+
+.dropdown-user strong {
+  display: block;
+
+  margin-bottom: 3px;
+}
+
+.dropdown-user span {
+  color: var(--muted);
+
+  font-size: 13px;
+}
+
+.dropdown-btn {
+  width: 100%;
+
+  border: 0;
+
+  background: transparent;
+
+  text-align: left;
+
+  padding: 12px;
+
+  border-radius: 10px;
+
+  font-weight: 750;
+}
+
+.dropdown-btn:hover {
+  background:
+    linear-gradient(
+      90deg,
+      #f1f6ff,
+      #f7f1ff,
+      #fff1f8
+    );
+
+  color: #7654ff;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast {
+  position: fixed;
+
+  right: 25px;
+  bottom: 25px;
+
+  z-index: 2000;
+
+  max-width: 360px;
+
+  color: white;
+
+  padding: 14px 18px;
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      100deg,
+      #347cff,
+      #7654ff,
+      #ff42a1
+    );
+
+  box-shadow:
+    0 15px 35px rgba(60,40,150,.25);
+
+  font-weight: 700;
+}
+
+footer {
+  margin-top: 60px;
+
+  padding: 30px 0;
+
+  text-align: center;
+
+  color: var(--muted);
+
+  border-top: 1px solid var(--border);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:850px) {
+
+  aside {
+    width: 75px;
+  }
+
+  .nav-title {
+    display: none;
+  }
+
+  .nav-btn {
+    text-align: center;
+
+    font-size: 0;
+  }
+
+  .nav-btn::first-letter {
+    font-size: 20px;
+  }
+
+  main {
+    padding: 19px;
+  }
+
+  .hero {
+    padding: 30px;
+  }
+}
+
+@media(max-width:650px) {
+
+  header {
+    padding: 0 12px;
+
+    gap: 9px;
+  }
+
+  .logo {
+    font-size: 25px;
+  }
+
+  .search {
+    display: none;
+  }
+
+  .account-button span {
+    display: none;
+  }
+
+  aside {
+    display: none;
+  }
+
+  main {
+    padding: 15px;
+  }
+
+  .hero {
+    min-height: 330px;
+
+    padding: 27px;
+  }
+
+  .hero h1 {
+    font-size: 39px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+
+    text-align: center;
+  }
+
+  .crop-stage,
+  #cropCanvas {
+    width: 270px;
+    height: 270px;
+  }
+
+  .auth-card {
+    padding: 27px 21px;
+  }
+
+  .auth-logo {
+    font-size: 40px;
+  }
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <div class="logo" onclick="showHome()">VYRO</div>
+
+  <div class="logo" onclick="showHome()">
+    VYRO
+  </div>
 
   <div class="search">
     <input
@@ -755,11 +1591,14 @@
       type="text"
       placeholder="Search VYRO..."
       onkeydown="handleSearch(event)"
-    />
+    >
   </div>
 
   <div class="header-actions">
-    <button class="icon-btn" title="Notifications">🔔</button>
+
+    <button class="icon-btn">
+      🔔
+    </button>
 
     <button
       id="guestSignUp"
@@ -782,222 +1621,363 @@
       class="account-button hidden"
       onclick="toggleAccountMenu()"
     >
-      <span id="headerAvatar" class="avatar"></span>
-      <span id="headerName">Account</span>
+
+      <span
+        id="headerAvatar"
+        class="avatar"
+      ></span>
+
+      <span id="headerName">
+        Account
+      </span>
+
     </button>
+
   </div>
+
 </header>
 
-<div id="accountDropdown" class="account-dropdown hidden">
+<div
+  id="accountDropdown"
+  class="account-dropdown hidden"
+>
+
   <div class="dropdown-user">
-    <strong id="dropdownName">VYRO User</strong>
-    <span id="dropdownEmail">Not signed in</span>
+
+    <strong id="dropdownName">
+      VYRO User
+    </strong>
+
+    <span id="dropdownEmail">
+      Not signed in
+    </span>
+
   </div>
 
-  <button class="dropdown-btn" onclick="showProfile(); closeAccountMenu()">
+  <button
+    class="dropdown-btn"
+    onclick="showProfile();closeAccountMenu()"
+  >
     👤 My Profile
   </button>
 
-  <button class="dropdown-btn" onclick="openSettings(); closeAccountMenu()">
+  <button
+    class="dropdown-btn"
+    onclick="openSettings();closeAccountMenu()"
+  >
     ⚙️ Account settings
   </button>
 
-  <button class="dropdown-btn" onclick="openPfpEditor(); closeAccountMenu()">
+  <button
+    class="dropdown-btn"
+    onclick="openPfpEditor();closeAccountMenu()"
+  >
     🖼️ Edit profile picture
   </button>
 
-  <button class="dropdown-btn" onclick="signOut()">
+  <button
+    class="dropdown-btn"
+    onclick="signOut()"
+  >
     🚪 Sign out
   </button>
+
 </div>
 
 <div class="layout">
 
-  <aside>
-    <div class="nav-section">
-      <div class="nav-title">Explore</div>
+<aside>
 
-      <button class="nav-btn active" onclick="showHome()">
-        🏠 Home
-      </button>
+  <div class="nav-section">
 
-      <button class="nav-btn" onclick="showShorts()">
-        ▶️ Shorts
-      </button>
-
-      <button class="nav-btn" onclick="showSubscriptions()">
-        ⭐ Subscriptions
-      </button>
+    <div class="nav-title">
+      Explore
     </div>
 
-    <div class="nav-section">
-      <div class="nav-title">You</div>
+    <button
+      class="nav-btn active"
+      onclick="showHome()"
+    >
+      🏠 Home
+    </button>
 
-      <button class="nav-btn" onclick="showPlaceholder('History')">
-        🕘 History
-      </button>
+    <button
+      class="nav-btn"
+      onclick="showShorts()"
+    >
+      ▶️ Shorts
+    </button>
 
-      <button class="nav-btn" onclick="showPlaceholder('Liked videos')">
-        ❤️ Liked videos
-      </button>
+    <button
+      class="nav-btn"
+      onclick="showSubscriptions()"
+    >
+      ⭐ Subscriptions
+    </button>
 
-      <button class="nav-btn" onclick="showPlaceholder('Playlists')">
-        📁 Playlists
-      </button>
+  </div>
+
+  <div class="nav-section">
+
+    <div class="nav-title">
+      You
     </div>
 
-    <div class="nav-section">
-      <div class="nav-title">Create</div>
+    <button
+      class="nav-btn"
+      onclick="showPlaceholder('History')"
+    >
+      🕘 History
+    </button>
 
-      <button class="nav-btn" onclick="requireLogin('Upload')">
-        ⬆️ Upload
-      </button>
+    <button
+      class="nav-btn"
+      onclick="showPlaceholder('Liked videos')"
+    >
+      ❤️ Liked videos
+    </button>
 
-      <button class="nav-btn" onclick="requireLogin('VYRO Studio')">
-        🎬 VYRO Studio
-      </button>
+    <button
+      class="nav-btn"
+      onclick="showPlaceholder('Playlists')"
+    >
+      📁 Playlists
+    </button>
+
+  </div>
+
+  <div class="nav-section">
+
+    <div class="nav-title">
+      Create
     </div>
-  </aside>
 
-  <main id="app"></main>
+    <button
+      class="nav-btn"
+      onclick="requireLogin('Upload')"
+    >
+      ⬆️ Upload
+    </button>
+
+    <button
+      class="nav-btn"
+      onclick="requireLogin('VYRO Studio')"
+    >
+      🎬 VYRO Studio
+    </button>
+
+  </div>
+
+</aside>
+
+<main id="app"></main>
 
 </div>
 
-<!-- AUTH MODAL -->
+<!-- AUTH -->
 
-<div id="authModal" class="modal-overlay hidden">
-  <div class="modal">
+<div
+  id="authModal"
+  class="auth-background hidden"
+>
 
-    <h2 id="authTitle">Sign in to VYRO</h2>
-    <p class="modal-subtitle" id="authSubtitle">
+  <div class="auth-card">
+
+    <div class="auth-logo">
+      VYRO
+    </div>
+
+    <h2 id="authTitle">
+      Sign in to VYRO
+    </h2>
+
+    <p id="authSubtitle">
       Continue watching and creating on VYRO.
     </p>
 
     <form id="authForm">
 
-      <div id="displayNameGroup" class="form-group hidden">
-        <label>Display name</label>
+      <div
+        id="displayNameGroup"
+        class="auth-form-group hidden"
+      >
+
+        <label>
+          Display name
+        </label>
+
         <input
           id="displayNameInput"
           type="text"
           placeholder="Your display name"
-        />
+        >
+
       </div>
 
-      <div class="form-group">
-        <label>Email</label>
+      <div class="auth-form-group">
+
+        <label>
+          Email
+        </label>
+
         <input
           id="emailInput"
           type="email"
           placeholder="you@example.com"
           required
-        />
+        >
+
       </div>
 
-      <div class="form-group">
-        <label>Password</label>
+      <div class="auth-form-group">
+
+        <label>
+          Password
+        </label>
+
         <input
           id="passwordInput"
           type="password"
           placeholder="••••••••"
           required
-        />
-      </div>
-
-      <div id="forgotArea" style="margin-top:8px;">
-        <button
-          type="button"
-          class="dropdown-btn"
-          style="padding-left:0;color:#7657ff;"
-          onclick="forgotPassword()"
         >
-          Forgot password?
-        </button>
+
       </div>
 
-      <div class="modal-actions">
-        <button
-          type="button"
-          class="secondary"
-          onclick="closeAuth()"
-        >
-          Cancel
-        </button>
+      <button
+        id="forgotButton"
+        type="button"
+        class="auth-link"
+        style="margin-bottom:14px;"
+        onclick="forgotPassword()"
+      >
+        Forgot password?
+      </button>
 
-        <button class="primary" type="submit" id="authSubmit">
-          Sign in
-        </button>
-      </div>
+      <button
+        id="authSubmit"
+        class="auth-submit"
+        type="submit"
+      >
+        Sign in
+      </button>
 
     </form>
 
-    <div style="text-align:center;margin-top:18px;color:#777;">
-      <span id="authSwitchText">Don't have an account?</span>
+    <div class="auth-links">
+
+      <span id="authSwitchText">
+        Don't have an account?
+      </span>
 
       <button
         id="authSwitchButton"
-        class="dropdown-btn"
-        style="display:inline;width:auto;color:#7657ff;"
+        class="auth-link"
         onclick="switchAuthMode()"
       >
         Sign up
       </button>
+
+      <br><br>
+
+      <button
+        class="auth-link"
+        onclick="closeAuth()"
+      >
+        ← Back to VYRO
+      </button>
+
     </div>
 
   </div>
+
 </div>
 
 <!-- RESET PASSWORD -->
 
-<div id="resetModal" class="modal-overlay hidden">
+<div
+  id="resetModal"
+  class="modal-overlay hidden"
+>
+
   <div class="modal">
 
-    <h2>Choose a new password</h2>
+    <h2>
+      Choose a new password
+    </h2>
+
     <p class="modal-subtitle">
       Enter your new VYRO account password.
     </p>
 
     <div class="form-group">
-      <label>New password</label>
+
+      <label>
+        New password
+      </label>
+
       <input
         id="newPasswordInput"
         type="password"
         placeholder="New password"
-      />
+      >
+
     </div>
 
     <div class="modal-actions">
-      <button class="primary" onclick="saveNewPassword()">
+
+      <button
+        class="primary"
+        onclick="saveNewPassword()"
+      >
         Save password
       </button>
+
     </div>
 
   </div>
+
 </div>
 
-<!-- PFP EDITOR -->
+<!-- PFP -->
 
-<div id="pfpModal" class="modal-overlay hidden">
+<div
+  id="pfpModal"
+  class="modal-overlay hidden"
+>
+
   <div class="modal large">
 
     <div class="pfp-editor">
 
-      <h2>Edit profile picture</h2>
+      <h2>
+        Edit profile picture
+      </h2>
 
       <p class="modal-subtitle">
-        Move the image around and use the slider to zoom.
+        Move your picture around and zoom it until it looks right.
       </p>
 
       <div class="crop-stage">
-        <canvas id="cropCanvas" width="320" height="320"></canvas>
+
+        <canvas
+          id="cropCanvas"
+          width="320"
+          height="320"
+        ></canvas>
+
       </div>
 
       <p class="crop-help">
-        Drag the image to position it inside the circle.
+        Drag the picture to reposition it.
       </p>
 
       <div class="zoom-control">
-        <label>Zoom</label>
+
+        <label>
+          Zoom
+        </label>
+
         <input
           id="zoomSlider"
           type="range"
@@ -1006,7 +1986,8 @@
           step="0.01"
           value="1"
           oninput="changeZoom(this.value)"
-        />
+        >
+
       </div>
 
       <div class="pfp-actions">
@@ -1019,7 +2000,7 @@
         </button>
 
         <button
-          class="secondary"
+          class="danger"
           onclick="removeProfilePicture()"
         >
           🗑️ Remove
@@ -1033,7 +2014,7 @@
         accept="image/*"
         class="hidden"
         onchange="loadProfilePicture(event)"
-      />
+      >
 
       <div class="modal-actions">
 
@@ -1056,42 +2037,85 @@
     </div>
 
   </div>
+
 </div>
 
-<!-- SETTINGS MODAL -->
+<!-- SETTINGS -->
 
-<div id="settingsModal" class="modal-overlay hidden">
+<div
+  id="settingsModal"
+  class="modal-overlay hidden"
+>
+
   <div class="modal">
 
-    <h2>Account settings</h2>
+    <h2>
+      Account settings
+    </h2>
+
     <p class="modal-subtitle">
       Manage your VYRO profile.
     </p>
 
     <div class="form-group">
-      <label>Display name</label>
-      <input id="settingsName" type="text">
+
+      <label>
+        Display name
+      </label>
+
+      <input
+        id="settingsName"
+        type="text"
+      >
+
     </div>
 
     <div class="form-group">
-      <label>Username</label>
-      <input id="settingsUsername" type="text">
+
+      <label>
+        Username
+      </label>
+
+      <input
+        id="settingsUsername"
+        type="text"
+      >
+
     </div>
 
     <div class="form-group">
-      <label>Bio</label>
-      <textarea id="settingsBio"></textarea>
+
+      <label>
+        Bio
+      </label>
+
+      <textarea
+        id="settingsBio"
+      ></textarea>
+
     </div>
 
     <div class="settings-row">
+
       <div>
-        <h3>Profile picture</h3>
-        <p>Change your VYRO avatar.</p>
+
+        <h3>
+          Profile picture
+        </h3>
+
+        <p>
+          Change your VYRO avatar.
+        </p>
+
       </div>
 
-      <button class="secondary" onclick="openPfpEditor()">
+      <button
+        class="secondary"
+        onclick="openPfpEditor()"
+      >
         Edit
       </button>
+
     </div>
 
     <div class="modal-actions">
@@ -1113,58 +2137,74 @@
     </div>
 
   </div>
+
 </div>
 
-<div id="toast" class="toast hidden"></div>
+<div
+  id="toast"
+  class="toast hidden"
+></div>
 
 <script>
-  /* =========================================
-     SUPABASE
-  ========================================= */
 
-  const SUPABASE_URL =
-    "https://wvxfambjjxwscaujoaop.supabase.co";
+/* ========================================
+   VYRO CONFIGURATION
+======================================== */
 
-  const SUPABASE_KEY =
-    "sb_publishable_bGjZzJVDVQK9fxV83_SpWQ_3rzEigkh";
+const SUPABASE_URL =
+  "https://wvxfambjjxwscaujoaop.supabase.co";
 
-  const supabaseClient =
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
+const SUPABASE_KEY =
+  "sb_publishable_bGjZzJVDVQK9fxV83_SpWQ_3rzEigkh";
 
-  const VYRO_URL =
-    "https://vyro-naj2-if10ankxf-vyro-64fc.vercel.app/";
+const VYRO_URL =
+  "https://vyro-naj2-if10ankxf-vyro-64fc.vercel.app/";
 
-  const STORAGE_BUCKET = "profile-pictures";
+const STORAGE_BUCKET =
+  "profile-pictures";
 
-  let currentUser = null;
-  let authMode = "signin";
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
-  /* =========================================
-     PFP EDITOR STATE
-  ========================================= */
+let currentUser = null;
 
-  let cropImage = null;
-  let cropScale = 1;
-  let baseScale = 1;
-  let cropX = 160;
-  let cropY = 160;
-  let dragStartX = 0;
-  let dragStartY = 0;
-  let startCropX = 0;
-  let startCropY = 0;
-  let dragging = false;
+let authMode = "signin";
 
-  const canvas = document.getElementById("cropCanvas");
-  const ctx = canvas.getContext("2d");
+/* ========================================
+   PFP EDITOR
+======================================== */
 
-  /* =========================================
-     STARTUP
-  ========================================= */
+let cropImage = null;
+let cropScale = 1;
+let baseScale = 1;
 
-  document.addEventListener("DOMContentLoaded", async () => {
+let cropX = 160;
+let cropY = 160;
+
+let dragStartX = 0;
+let dragStartY = 0;
+
+let startCropX = 0;
+let startCropY = 0;
+
+let dragging = false;
+
+const canvas =
+  document.getElementById("cropCanvas");
+
+const ctx =
+  canvas.getContext("2d");
+
+/* ========================================
+   START
+======================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async () => {
 
     setupCropDragging();
 
@@ -1172,969 +2212,1220 @@
       data: {
         session
       }
-    } = await supabaseClient.auth.getSession();
+    } =
+      await supabaseClient.auth
+        .getSession();
 
     if (session?.user) {
+
       await loadUser(session.user);
+
     } else {
+
       renderHome();
+
     }
 
     supabaseClient.auth.onAuthStateChange(
       async (event, session) => {
 
         if (session?.user) {
+
           await loadUser(session.user);
+
         } else {
+
           currentUser = null;
+
           updateHeader();
+
           renderHome();
+
         }
 
       }
     );
 
-  });
-
-  /* =========================================
-     USER
-  ========================================= */
-
-  async function loadUser(user) {
-
-    currentUser = user;
-
-    updateHeader();
-
-    if (
-      window.location.hash.includes("type=recovery")
-    ) {
-      document.getElementById("resetModal")
-        .classList.remove("hidden");
-    }
-
   }
+);
 
-  function getProfileData() {
+/* ========================================
+   USER
+======================================== */
 
-    const metadata =
-      currentUser?.user_metadata || {};
+async function loadUser(user) {
 
-    return {
-      displayName:
-        metadata.display_name ||
-        metadata.full_name ||
-        currentUser?.email?.split("@")[0] ||
-        "VYRO User",
+  currentUser = user;
 
-      username:
-        metadata.username ||
-        "vyro_user",
+  updateHeader();
 
-      bio:
-        metadata.bio ||
-        "",
-
-      avatarUrl:
-        metadata.avatar_url ||
-        null,
-
-      avatarPath:
-        metadata.avatar_path ||
-        null
-    };
-
-  }
-
-  function getInitials(name) {
-
-    if (!name) return "V";
-
-    const words =
-      name.trim().split(/\s+/);
-
-    if (words.length === 1) {
-      return words[0]
-        .substring(0, 2)
-        .toUpperCase();
-    }
-
-    return (
-      words[0][0] +
-      words[words.length - 1][0]
-    ).toUpperCase();
-
-  }
-
-  function avatarHTML(sizeClass = "") {
-
-    const profile = getProfileData();
-
-    if (profile.avatarUrl) {
-
-      return `
-        <img
-          src="${escapeHTML(profile.avatarUrl)}"
-          alt="Profile picture"
-          onerror="this.style.display='none';this.parentElement.innerText='${escapeHTML(getInitials(profile.displayName))}'"
-        >
-      `;
-
-    }
-
-    return escapeHTML(
-      getInitials(profile.displayName)
-    );
-
-  }
-
-  function updateHeader() {
-
-    const signUp =
-      document.getElementById("guestSignUp");
-
-    const signIn =
-      document.getElementById("guestSignIn");
-
-    const account =
-      document.getElementById("accountButton");
-
-    if (!currentUser) {
-
-      signUp.classList.remove("hidden");
-      signIn.classList.remove("hidden");
-      account.classList.add("hidden");
-
-      return;
-
-    }
-
-    signUp.classList.add("hidden");
-    signIn.classList.add("hidden");
-    account.classList.remove("hidden");
-
-    const profile = getProfileData();
-
-    document.getElementById("headerName")
-      .textContent = profile.displayName;
-
-    document.getElementById("headerAvatar")
-      .innerHTML = avatarHTML();
-
-    document.getElementById("dropdownName")
-      .textContent = profile.displayName;
-
-    document.getElementById("dropdownEmail")
-      .textContent = currentUser.email || "";
-
-  }
-
-  /* =========================================
-     HOME
-  ========================================= */
-
-  function renderHome() {
-
-    document.getElementById("app").innerHTML = `
-
-      <section class="hero">
-
-        <div>
-
-          <h1>Welcome to VYRO.</h1>
-
-          <p>
-            Watch, discover, create and share.
-            VYRO is your new home for videos,
-            Shorts, creators and communities.
-          </p>
-
-          <button
-            class="hero-button"
-            onclick="requireLogin('Create on VYRO')"
-          >
-            Start creating
-          </button>
-
-        </div>
-
-        <div class="hero-orb"></div>
-
-      </section>
-
-      <div class="categories">
-
-        <button class="category active">All</button>
-        <button class="category">Gaming</button>
-        <button class="category">Music</button>
-        <button class="category">Entertainment</button>
-        <button class="category">Technology</button>
-        <button class="category">Roblox</button>
-        <button class="category">Live</button>
-        <button class="category">Trending</button>
-
-      </div>
-
-      <div class="section-heading">
-        <h2>Recommended for you</h2>
-      </div>
-
-      <div class="video-grid">
-
-        ${videoCard(
-          "🎮",
-          "Welcome to VYRO",
-          "VYRO",
-          "Start exploring the platform",
-          "4:21"
-        )}
-
-        ${videoCard(
-          "🚀",
-          "The future of creators",
-          "VYRO Creators",
-          "Build your audience",
-          "8:42"
-        )}
-
-        ${videoCard(
-          "🔥",
-          "Trending right now",
-          "VYRO Trending",
-          "See what's getting attention",
-          "6:15"
-        )}
-
-        ${videoCard(
-          "🎥",
-          "How VYRO works",
-          "VYRO",
-          "Everything you need to know",
-          "5:38"
-        )}
-
-      </div>
-
-      <div class="section-heading" style="margin-top:45px;">
-        <h2>Shorts</h2>
-      </div>
-
-      <div class="shorts-grid">
-
-        ${shortCard("⚡", "Quick gaming clip")}
-        ${shortCard("🔥", "What's trending")}
-        ${shortCard("😂", "Funny moments")}
-        ${shortCard("🎮", "Gaming Shorts")}
-        ${shortCard("🚀", "Creator tips")}
-
-      </div>
-
-      <footer>
-        VYRO © 2026 · Watch. Create. Share.
-      </footer>
-    `;
-  }
-
-  function videoCard(icon, title, creator, meta, duration) {
-
-    return `
-      <div class="video-card">
-
-        <div class="thumbnail">
-          ${icon}
-          <span>${duration}</span>
-        </div>
-
-        <div class="video-info">
-
-          <div class="avatar">
-            ${getInitials(creator)}
-          </div>
-
-          <div>
-            <div class="video-title">
-              ${title}
-            </div>
-
-            <div class="video-meta">
-              ${creator}<br>
-              ${meta}
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    `;
-
-  }
-
-  function shortCard(icon, title) {
-
-    return `
-      <div
-        class="short-card"
-        onclick="showToast('Shorts will be connected to your video system next.')"
-      >
-        <div>
-          <div style="font-size:38px;margin-bottom:10px;">
-            ${icon}
-          </div>
-          ${title}
-        </div>
-      </div>
-    `;
-
-  }
-
-  function showHome() {
-    renderHome();
-  }
-
-  function showShorts() {
-
-    document.getElementById("app").innerHTML = `
-
-      <div class="section-heading">
-        <h2>Shorts</h2>
-      </div>
-
-      <p style="color:#74748b;margin-bottom:25px;">
-        Discover quick videos from VYRO creators.
-      </p>
-
-      <div class="shorts-grid">
-        ${shortCard("🎮", "Gaming")}
-        ${shortCard("😂", "Funny")}
-        ${shortCard("🔥", "Trending")}
-        ${shortCard("🎵", "Music")}
-        ${shortCard("🚀", "Creators")}
-        ${shortCard("💡", "Tips")}
-      </div>
-    `;
-
-  }
-
-  function showSubscriptions() {
-
-    requireLogin("Subscriptions");
-
-    if (!currentUser) return;
-
-    document.getElementById("app").innerHTML = `
-
-      <div class="section-heading">
-        <h2>Your subscriptions</h2>
-      </div>
-
-      <div class="settings-card">
-        <h3>No subscriptions yet</h3>
-        <p style="color:#74748b;margin-top:8px;">
-          Subscribe to creators and their videos will appear here.
-        </p>
-      </div>
-    `;
-
-  }
-
-  function showPlaceholder(name) {
-
-    document.getElementById("app").innerHTML = `
-
-      <div class="section-heading">
-        <h2>${escapeHTML(name)}</h2>
-      </div>
-
-      <div class="settings-card">
-        <h3>${escapeHTML(name)} is coming soon.</h3>
-        <p style="color:#74748b;margin-top:8px;">
-          This section will be connected as the VYRO platform grows.
-        </p>
-      </div>
-    `;
-
-  }
-
-  /* =========================================
-     AUTH
-  ========================================= */
-
-  function openAuth(mode) {
-
-    authMode = mode;
+  if (
+    window.location.hash.includes(
+      "type=recovery"
+    )
+  ) {
 
     document
-      .getElementById("authModal")
+      .getElementById("resetModal")
       .classList.remove("hidden");
 
-    updateAuthModal();
+  }
+
+}
+
+function getProfileData() {
+
+  const metadata =
+    currentUser?.user_metadata || {};
+
+  return {
+
+    displayName:
+      metadata.display_name ||
+      metadata.full_name ||
+      currentUser?.email?.split("@")[0] ||
+      "VYRO User",
+
+    username:
+      metadata.username ||
+      "vyro_user",
+
+    bio:
+      metadata.bio ||
+      "",
+
+    avatarUrl:
+      metadata.avatar_url ||
+      null,
+
+    avatarPath:
+      metadata.avatar_path ||
+      null
+
+  };
+
+}
+
+function getInitials(name) {
+
+  if (!name) return "V";
+
+  const words =
+    name.trim().split(/\s+/);
+
+  if (words.length === 1) {
+
+    return words[0]
+      .substring(0,2)
+      .toUpperCase();
 
   }
 
-  function closeAuth() {
+  return (
+    words[0][0] +
+    words[words.length - 1][0]
+  ).toUpperCase();
 
-    document
-      .getElementById("authModal")
-      .classList.add("hidden");
+}
+
+function avatarHTML() {
+
+  const profile =
+    getProfileData();
+
+  if (profile.avatarUrl) {
+
+    return `
+      <img
+        src="${escapeHTML(profile.avatarUrl)}"
+        alt="Profile picture"
+      >
+    `;
+
+  }
+
+  return escapeHTML(
+    getInitials(
+      profile.displayName
+    )
+  );
+
+}
+
+function updateHeader() {
+
+  const signUp =
+    document.getElementById(
+      "guestSignUp"
+    );
+
+  const signIn =
+    document.getElementById(
+      "guestSignIn"
+    );
+
+  const account =
+    document.getElementById(
+      "accountButton"
+    );
+
+  if (!currentUser) {
+
+    signUp.classList.remove(
+      "hidden"
+    );
+
+    signIn.classList.remove(
+      "hidden"
+    );
+
+    account.classList.add(
+      "hidden"
+    );
+
+    return;
 
   }
 
-  function switchAuthMode() {
+  signUp.classList.add(
+    "hidden"
+  );
 
-    authMode =
-      authMode === "signin"
-        ? "signup"
-        : "signin";
+  signIn.classList.add(
+    "hidden"
+  );
 
-    updateAuthModal();
+  account.classList.remove(
+    "hidden"
+  );
 
+  const profile =
+    getProfileData();
+
+  document.getElementById(
+    "headerName"
+  ).textContent =
+    profile.displayName;
+
+  document.getElementById(
+    "headerAvatar"
+  ).innerHTML =
+    avatarHTML();
+
+  document.getElementById(
+    "dropdownName"
+  ).textContent =
+    profile.displayName;
+
+  document.getElementById(
+    "dropdownEmail"
+  ).textContent =
+    currentUser.email || "";
+
+}
+
+/* ========================================
+   HOME
+======================================== */
+
+function renderHome() {
+
+  document.getElementById(
+    "app"
+  ).innerHTML = `
+
+    <section class="hero">
+
+      <div class="hero-content">
+
+        <h1>
+          Welcome to VYRO.
+        </h1>
+
+        <p>
+          Watch, discover, create and share.
+          VYRO is your new home for videos,
+          Shorts, creators and communities.
+        </p>
+
+        <button
+          class="hero-button"
+          onclick="requireLogin('Create on VYRO')"
+        >
+          Start creating
+        </button>
+
+      </div>
+
+    </section>
+
+    <div class="categories">
+
+      <button class="category active">
+        All
+      </button>
+
+      <button class="category">
+        Gaming
+      </button>
+
+      <button class="category">
+        Music
+      </button>
+
+      <button class="category">
+        Entertainment
+      </button>
+
+      <button class="category">
+        Technology
+      </button>
+
+      <button class="category">
+        Roblox
+      </button>
+
+      <button class="category">
+        Live
+      </button>
+
+      <button class="category">
+        Trending
+      </button>
+
+    </div>
+
+    <div class="section-heading">
+
+      <h2>
+        Recommended for you
+      </h2>
+
+    </div>
+
+    <div class="video-grid">
+
+      ${videoCard(
+        "🎮",
+        "Welcome to VYRO",
+        "VYRO",
+        "Start exploring the platform",
+        "4:21"
+      )}
+
+      ${videoCard(
+        "🚀",
+        "The future of creators",
+        "VYRO Creators",
+        "Build your audience",
+        "8:42"
+      )}
+
+      ${videoCard(
+        "🔥",
+        "Trending right now",
+        "VYRO Trending",
+        "See what's getting attention",
+        "6:15"
+      )}
+
+      ${videoCard(
+        "🎥",
+        "How VYRO works",
+        "VYRO",
+        "Everything you need to know",
+        "5:38"
+      )}
+
+    </div>
+
+    <div
+      class="section-heading"
+      style="margin-top:45px;"
+    >
+
+      <h2>
+        Shorts
+      </h2>
+
+    </div>
+
+    <div class="shorts-grid">
+
+      ${shortCard("⚡","Quick gaming clip")}
+      ${shortCard("🔥","What's trending")}
+      ${shortCard("😂","Funny moments")}
+      ${shortCard("🎮","Gaming Shorts")}
+      ${shortCard("🚀","Creator tips")}
+
+    </div>
+
+    <footer>
+      VYRO © 2026 · Watch. Create. Share.
+    </footer>
+
+  `;
+
+}
+
+function videoCard(
+  icon,
+  title,
+  creator,
+  meta,
+  duration
+) {
+
+  return `
+
+    <div class="video-card">
+
+      <div class="thumbnail">
+
+        ${icon}
+
+        <span>
+          ${duration}
+        </span>
+
+      </div>
+
+      <div class="video-info">
+
+        <div class="avatar">
+          ${getInitials(creator)}
+        </div>
+
+        <div>
+
+          <div class="video-title">
+            ${title}
+          </div>
+
+          <div class="video-meta">
+            ${creator}<br>
+            ${meta}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function shortCard(icon,title) {
+
+  return `
+
+    <div
+      class="short-card"
+      onclick="showToast('Shorts will be connected to the video system next.')"
+    >
+
+      <div>
+
+        <div
+          style="
+            font-size:38px;
+            margin-bottom:10px;
+          "
+        >
+          ${icon}
+        </div>
+
+        ${title}
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function showHome() {
+  renderHome();
+}
+
+function showShorts() {
+
+  document.getElementById(
+    "app"
+  ).innerHTML = `
+
+    <div class="section-heading">
+      <h2>Shorts</h2>
+    </div>
+
+    <p
+      style="
+        color:#77778d;
+        margin-bottom:25px;
+      "
+    >
+      Discover quick videos from VYRO creators.
+    </p>
+
+    <div class="shorts-grid">
+
+      ${shortCard("🎮","Gaming")}
+      ${shortCard("😂","Funny")}
+      ${shortCard("🔥","Trending")}
+      ${shortCard("🎵","Music")}
+      ${shortCard("🚀","Creators")}
+      ${shortCard("💡","Tips")}
+
+    </div>
+
+  `;
+
+}
+
+function showSubscriptions() {
+
+  if (!requireLogin("Subscriptions")) {
+    return;
   }
 
-  function updateAuthModal() {
+  document.getElementById(
+    "app"
+  ).innerHTML = `
 
-    const signup =
-      authMode === "signup";
+    <div class="section-heading">
 
-    document.getElementById("authTitle")
-      .textContent =
-      signup
-        ? "Create your VYRO account"
-        : "Sign in to VYRO";
+      <h2>
+        Your subscriptions
+      </h2>
 
-    document.getElementById("authSubtitle")
-      .textContent =
-      signup
-        ? "Join VYRO and start creating."
-        : "Continue watching and creating on VYRO.";
+    </div>
 
-    document.getElementById("displayNameGroup")
-      .classList.toggle("hidden", !signup);
+    <div class="settings-card">
 
-    document.getElementById("authSubmit")
-      .textContent =
-      signup
-        ? "Create account"
-        : "Sign in";
+      <h3>
+        No subscriptions yet
+      </h3>
 
-    document.getElementById("authSwitchText")
-      .textContent =
-      signup
-        ? "Already have an account?"
-        : "Don't have an account?";
+      <p
+        style="
+          color:#77778d;
+          margin-top:8px;
+        "
+      >
+        Subscribe to creators and their videos
+        will appear here.
+      </p>
 
-    document.getElementById("authSwitchButton")
-      .textContent =
-      signup
-        ? "Sign in"
-        : "Sign up";
+    </div>
 
-    document.getElementById("forgotArea")
-      .classList.toggle("hidden", signup);
+  `;
 
-  }
+}
+
+function showPlaceholder(name) {
+
+  document.getElementById(
+    "app"
+  ).innerHTML = `
+
+    <div class="section-heading">
+
+      <h2>
+        ${escapeHTML(name)}
+      </h2>
+
+    </div>
+
+    <div class="settings-card">
+
+      <h3>
+        ${escapeHTML(name)}
+        is coming soon.
+      </h3>
+
+      <p
+        style="
+          color:#77778d;
+          margin-top:8px;
+        "
+      >
+        This section will be connected as
+        VYRO grows.
+      </p>
+
+    </div>
+
+  `;
+
+}
+
+/* ========================================
+   AUTH
+======================================== */
+
+function openAuth(mode) {
+
+  authMode = mode;
 
   document
-    .getElementById("authForm")
-    .addEventListener("submit", async (event) => {
+    .getElementById("authModal")
+    .classList.remove("hidden");
+
+  updateAuthModal();
+
+}
+
+function closeAuth() {
+
+  document
+    .getElementById("authModal")
+    .classList.add("hidden");
+
+}
+
+function switchAuthMode() {
+
+  authMode =
+    authMode === "signin"
+      ? "signup"
+      : "signin";
+
+  updateAuthModal();
+
+}
+
+function updateAuthModal() {
+
+  const signup =
+    authMode === "signup";
+
+  document.getElementById(
+    "authTitle"
+  ).textContent =
+    signup
+      ? "Create your VYRO account"
+      : "Sign in to VYRO";
+
+  document.getElementById(
+    "authSubtitle"
+  ).textContent =
+    signup
+      ? "Join VYRO and start creating."
+      : "Continue watching and creating on VYRO.";
+
+  document.getElementById(
+    "displayNameGroup"
+  ).classList.toggle(
+    "hidden",
+    !signup
+  );
+
+  document.getElementById(
+    "authSubmit"
+  ).textContent =
+    signup
+      ? "Create account"
+      : "Sign in";
+
+  document.getElementById(
+    "authSwitchText"
+  ).textContent =
+    signup
+      ? "Already have an account?"
+      : "Don't have an account?";
+
+  document.getElementById(
+    "authSwitchButton"
+  ).textContent =
+    signup
+      ? "Sign in"
+      : "Sign up";
+
+  document.getElementById(
+    "forgotButton"
+  ).classList.toggle(
+    "hidden",
+    signup
+  );
+
+}
+
+document
+  .getElementById("authForm")
+  .addEventListener(
+    "submit",
+    async event => {
 
       event.preventDefault();
 
       const email =
-        document.getElementById("emailInput")
-          .value.trim();
+        document.getElementById(
+          "emailInput"
+        ).value.trim();
 
       const password =
-        document.getElementById("passwordInput")
-          .value;
+        document.getElementById(
+          "passwordInput"
+        ).value;
 
       const displayName =
-        document.getElementById("displayNameInput")
-          .value.trim();
+        document.getElementById(
+          "displayNameInput"
+        ).value.trim();
 
       const button =
-        document.getElementById("authSubmit");
+        document.getElementById(
+          "authSubmit"
+        );
 
       button.disabled = true;
-      button.textContent = "Please wait...";
+
+      button.textContent =
+        "Please wait...";
 
       try {
 
         if (authMode === "signup") {
 
           if (!displayName) {
-            throw new Error("Please enter a display name.");
+            throw new Error(
+              "Please enter a display name."
+            );
           }
 
           const username =
-            createUsername(displayName);
+            createUsername(
+              displayName
+            );
 
           const {
-            data,
             error
           } =
-            await supabaseClient.auth.signUp({
+            await supabaseClient.auth
+              .signUp({
 
-              email,
-              password,
+                email,
 
-              options: {
-                emailRedirectTo: VYRO_URL,
+                password,
 
-                data: {
-                  display_name: displayName,
-                  username,
-                  bio: "",
-                  avatar_url: null,
-                  avatar_path: null
+                options: {
+
+                  emailRedirectTo:
+                    VYRO_URL,
+
+                  data: {
+
+                    display_name:
+                      displayName,
+
+                    username,
+
+                    bio: "",
+
+                    avatar_url:
+                      null,
+
+                    avatar_path:
+                      null
+
+                  }
+
                 }
-              }
 
-            });
+              });
 
           if (error) throw error;
 
           closeAuth();
 
           showToast(
-            "Account created. Check your email if verification is required."
+            "Account created! Check your email if verification is required."
           );
 
         } else {
 
           const {
-            data,
             error
           } =
-            await supabaseClient.auth.signInWithPassword({
-              email,
-              password
-            });
+            await supabaseClient.auth
+              .signInWithPassword({
+
+                email,
+
+                password
+
+              });
 
           if (error) throw error;
 
           closeAuth();
 
-          showToast("Welcome back to VYRO!");
+          showToast(
+            "Welcome back to VYRO!"
+          );
 
         }
 
-      } catch (error) {
+      } catch(error) {
 
         showToast(
-          error.message || "Something went wrong."
+          error.message ||
+          "Something went wrong."
         );
 
       } finally {
 
         button.disabled = false;
+
         updateAuthModal();
 
       }
 
-    });
-
-  async function signOut() {
-
-    await supabaseClient.auth.signOut();
-
-    closeAccountMenu();
-
-    showToast("You have been signed out.");
-
-    renderHome();
-
-  }
-
-  async function forgotPassword() {
-
-    const email =
-      document.getElementById("emailInput")
-        .value.trim();
-
-    if (!email) {
-
-      showToast(
-        "Enter your email address first."
-      );
-
-      return;
-
     }
+  );
 
-    const {
-      error
-    } =
-      await supabaseClient.auth
-        .resetPasswordForEmail(
-          email,
-          {
-            redirectTo: VYRO_URL
-          }
-        );
+async function signOut() {
 
-    if (error) {
+  await supabaseClient.auth.signOut();
 
-      showToast(error.message);
+  closeAccountMenu();
 
-      return;
+  showToast(
+    "You have been signed out."
+  );
 
-    }
+  renderHome();
+
+}
+
+async function forgotPassword() {
+
+  const email =
+    document.getElementById(
+      "emailInput"
+    ).value.trim();
+
+  if (!email) {
 
     showToast(
-      "Password reset email sent."
+      "Enter your email address first."
     );
 
+    return;
+
   }
 
-  async function saveNewPassword() {
-
-    const password =
-      document.getElementById("newPasswordInput")
-        .value;
-
-    if (password.length < 6) {
-
-      showToast(
-        "Your password must be at least 6 characters."
+  const {
+    error
+  } =
+    await supabaseClient.auth
+      .resetPasswordForEmail(
+        email,
+        {
+          redirectTo: VYRO_URL
+        }
       );
 
-      return;
+  if (error) {
 
-    }
+    showToast(error.message);
 
-    const {
-      error
-    } =
-      await supabaseClient.auth
-        .updateUser({
-          password
-        });
-
-    if (error) {
-
-      showToast(error.message);
-
-      return;
-
-    }
-
-    document
-      .getElementById("resetModal")
-      .classList.add("hidden");
-
-    showToast("Password updated.");
+    return;
 
   }
 
-  /* =========================================
-     PROFILE
-  ========================================= */
+  showToast(
+    "Password reset email sent."
+  );
 
-  function showProfile() {
+}
 
-    if (!currentUser) {
+async function saveNewPassword() {
 
-      openAuth("signin");
+  const password =
+    document.getElementById(
+      "newPasswordInput"
+    ).value;
 
-      return;
+  if (password.length < 6) {
 
-    }
+    showToast(
+      "Your password must be at least 6 characters."
+    );
 
-    const profile =
-      getProfileData();
+    return;
 
-    document.getElementById("app").innerHTML = `
+  }
 
-      <div class="profile-header">
+  const {
+    error
+  } =
+    await supabaseClient.auth
+      .updateUser({
+        password
+      });
 
-        <div
-          class="profile-large-avatar"
-          id="profileAvatar"
-        >
-          ${avatarHTML()}
+  if (error) {
+
+    showToast(error.message);
+
+    return;
+
+  }
+
+  document
+    .getElementById("resetModal")
+    .classList.add("hidden");
+
+  showToast(
+    "Password updated."
+  );
+
+}
+
+/* ========================================
+   PROFILE
+======================================== */
+
+function showProfile() {
+
+  if (!currentUser) {
+
+    openAuth("signin");
+
+    return;
+
+  }
+
+  const profile =
+    getProfileData();
+
+  document.getElementById(
+    "app"
+  ).innerHTML = `
+
+    <div class="profile-header">
+
+      <div
+        class="profile-large-avatar"
+      >
+        ${avatarHTML()}
+      </div>
+
+      <div>
+
+        <div class="profile-name">
+          ${escapeHTML(
+            profile.displayName
+          )}
         </div>
+
+        <div class="profile-username">
+          @${escapeHTML(
+            profile.username
+          )}
+        </div>
+
+        <p
+          style="
+            color:#666;
+            line-height:1.5;
+          "
+        >
+          ${escapeHTML(
+            profile.bio ||
+            "No bio added yet."
+          )}
+        </p>
+
+        <button
+          class="primary"
+          style="margin-top:15px;"
+          onclick="openPfpEditor()"
+        >
+          🖼️ Edit profile picture
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="settings-card">
+
+      <div class="settings-row">
 
         <div>
 
-          <div class="profile-name">
-            ${escapeHTML(profile.displayName)}
-          </div>
+          <h3>
+            Profile
+          </h3>
 
-          <div class="profile-username">
-            @${escapeHTML(profile.username)}
-          </div>
-
-          <p style="color:#666;line-height:1.5;">
-            ${escapeHTML(profile.bio || "No bio added yet.")}
+          <p>
+            Edit your VYRO profile details.
           </p>
 
-          <button
-            class="primary"
-            style="margin-top:15px;"
-            onclick="openPfpEditor()"
-          >
-            🖼️ Edit profile picture
-          </button>
-
         </div>
+
+        <button
+          class="secondary"
+          onclick="openSettings()"
+        >
+          Edit
+        </button>
 
       </div>
 
-      <div class="settings-card">
+      <div class="settings-row">
 
-        <div class="settings-row">
+        <div>
 
-          <div>
-            <h3>Profile</h3>
-            <p>Edit your VYRO profile details.</p>
-          </div>
+          <h3>
+            Creator status
+          </h3>
 
-          <button
-            class="secondary"
-            onclick="openSettings()"
-          >
-            Edit
-          </button>
+          <p>
+            Your creator tools will appear here.
+          </p>
 
         </div>
 
-        <div class="settings-row">
-
-          <div>
-            <h3>Creator status</h3>
-            <p>
-              Your creator tools will appear here.
-            </p>
-          </div>
-
-          <button
-            class="secondary"
-            onclick="requireLogin('VYRO Studio')"
-          >
-            Open Studio
-          </button>
-
-        </div>
+        <button
+          class="secondary"
+          onclick="requireLogin('VYRO Studio')"
+        >
+          Open Studio
+        </button>
 
       </div>
-    `;
+
+    </div>
+
+  `;
+
+}
+
+/* ========================================
+   SETTINGS
+======================================== */
+
+function openSettings() {
+
+  if (!currentUser) {
+
+    openAuth("signin");
+
+    return;
 
   }
 
-  /* =========================================
-     SETTINGS
-  ========================================= */
+  const profile =
+    getProfileData();
 
-  function openSettings() {
+  document.getElementById(
+    "settingsName"
+  ).value =
+    profile.displayName;
 
-    if (!currentUser) {
+  document.getElementById(
+    "settingsUsername"
+  ).value =
+    profile.username;
 
-      openAuth("signin");
+  document.getElementById(
+    "settingsBio"
+  ).value =
+    profile.bio;
 
-      return;
+  document
+    .getElementById("settingsModal")
+    .classList.remove("hidden");
 
-    }
+}
 
-    const profile =
-      getProfileData();
+function closeSettings() {
 
-    document.getElementById("settingsName")
-      .value = profile.displayName;
+  document
+    .getElementById("settingsModal")
+    .classList.add("hidden");
 
-    document.getElementById("settingsUsername")
-      .value = profile.username;
+}
 
-    document.getElementById("settingsBio")
-      .value = profile.bio;
+async function saveSettings() {
 
-    document
-      .getElementById("settingsModal")
-      .classList.remove("hidden");
+  if (!currentUser) return;
 
-  }
+  const displayName =
+    document.getElementById(
+      "settingsName"
+    ).value.trim();
 
-  function closeSettings() {
+  const username =
+    document.getElementById(
+      "settingsUsername"
+    ).value
+      .trim()
+      .replace(
+        /[^a-zA-Z0-9_]/g,
+        ""
+      )
+      .toLowerCase();
 
-    document
-      .getElementById("settingsModal")
-      .classList.add("hidden");
+  const bio =
+    document.getElementById(
+      "settingsBio"
+    ).value.trim();
 
-  }
+  if (!displayName) {
 
-  async function saveSettings() {
+    showToast(
+      "Display name cannot be empty."
+    );
 
-    if (!currentUser) return;
-
-    const displayName =
-      document.getElementById("settingsName")
-        .value.trim();
-
-    const username =
-      document.getElementById("settingsUsername")
-        .value.trim()
-        .replace(/[^a-zA-Z0-9_]/g, "")
-        .toLowerCase();
-
-    const bio =
-      document.getElementById("settingsBio")
-        .value.trim();
-
-    if (!displayName) {
-
-      showToast(
-        "Display name cannot be empty."
-      );
-
-      return;
-
-    }
-
-    const current =
-      getProfileData();
-
-    const {
-      error
-    } =
-      await supabaseClient.auth
-        .updateUser({
-          data: {
-            display_name: displayName,
-            username:
-              username || current.username,
-            bio,
-            avatar_url:
-              current.avatarUrl,
-            avatar_path:
-              current.avatarPath
-          }
-        });
-
-    if (error) {
-
-      showToast(error.message);
-
-      return;
-
-    }
-
-    await refreshCurrentUser();
-
-    closeSettings();
-
-    showProfile();
-
-    showToast("Profile updated.");
+    return;
 
   }
 
-  /* =========================================
-     PFP EDITOR
-  ========================================= */
+  const current =
+    getProfileData();
 
-  function openPfpEditor() {
+  const {
+    error
+  } =
+    await supabaseClient.auth
+      .updateUser({
 
-    if (!currentUser) {
+        data: {
 
-      openAuth("signin");
+          display_name:
+            displayName,
 
-      return;
+          username:
+            username ||
+            current.username,
 
-    }
+          bio,
 
-    document
-      .getElementById("pfpModal")
-      .classList.remove("hidden");
+          avatar_url:
+            current.avatarUrl,
 
-    const profile =
-      getProfileData();
+          avatar_path:
+            current.avatarPath
 
-    if (profile.avatarUrl) {
+        }
 
-      loadExistingAvatar(profile.avatarUrl);
+      });
 
-    } else {
+  if (error) {
 
-      resetCropEditor();
+    showToast(error.message);
 
-    }
-
-  }
-
-  function closePfpEditor() {
-
-    document
-      .getElementById("pfpModal")
-      .classList.add("hidden");
+    return;
 
   }
 
-  function chooseProfilePicture() {
+  await refreshCurrentUser();
 
-    document
-      .getElementById("pfpFileInput")
-      .click();
+  closeSettings();
 
-  }
+  showProfile();
 
-  function loadProfilePicture(event) {
+  showToast(
+    "Profile updated."
+  );
 
-    const file =
-      event.target.files?.[0];
+}
 
-    if (!file) return;
+/* ========================================
+   PFP EDITOR
+======================================== */
 
-    if (!file.type.startsWith("image/")) {
+function openPfpEditor() {
 
-      showToast(
-        "Please choose an image file."
-      );
+  if (!currentUser) {
 
-      return;
+    openAuth("signin");
 
-    }
-
-    if (file.size > 8 * 1024 * 1024) {
-
-      showToast(
-        "Please choose an image smaller than 8MB."
-      );
-
-      return;
-
-    }
-
-    const reader =
-      new FileReader();
-
-    reader.onload = () => {
-
-      const image =
-        new Image();
-
-      image.onload = () => {
-
-        cropImage = image;
-
-        setupImagePosition();
-
-        drawCrop();
-
-      };
-
-      image.src = reader.result;
-
-    };
-
-    reader.readAsDataURL(file);
+    return;
 
   }
 
-  function loadExistingAvatar(url) {
+  document
+    .getElementById("pfpModal")
+    .classList.remove("hidden");
+
+  const profile =
+    getProfileData();
+
+  if (profile.avatarUrl) {
+
+    loadExistingAvatar(
+      profile.avatarUrl
+    );
+
+  } else {
+
+    resetCropEditor();
+
+  }
+
+}
+
+function closePfpEditor() {
+
+  document
+    .getElementById("pfpModal")
+    .classList.add("hidden");
+
+}
+
+function chooseProfilePicture() {
+
+  document
+    .getElementById("pfpFileInput")
+    .click();
+
+}
+
+function loadProfilePicture(event) {
+
+  const file =
+    event.target.files?.[0];
+
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+
+    showToast(
+      "Please choose an image."
+    );
+
+    return;
+
+  }
+
+  if (
+    file.size >
+    8 * 1024 * 1024
+  ) {
+
+    showToast(
+      "Please choose an image smaller than 8MB."
+    );
+
+    return;
+
+  }
+
+  const reader =
+    new FileReader();
+
+  reader.onload = () => {
 
     const image =
       new Image();
-
-    image.crossOrigin = "anonymous";
 
     image.onload = () => {
 
@@ -2146,644 +3437,720 @@
 
     };
 
-    image.onerror = () => {
-
-      resetCropEditor();
-
-    };
-
     image.src =
-      url + (
-        url.includes("?")
-          ? "&"
-          : "?"
-      ) + "editor=" + Date.now();
+      reader.result;
 
-  }
+  };
 
-  function setupImagePosition() {
+  reader.readAsDataURL(file);
 
-    if (!cropImage) return;
+}
 
-    const width =
-      cropImage.naturalWidth ||
-      cropImage.width;
+function loadExistingAvatar(url) {
 
-    const height =
-      cropImage.naturalHeight ||
-      cropImage.height;
+  const image =
+    new Image();
 
-    baseScale =
-      Math.max(
-        canvas.width / width,
-        canvas.height / height
-      );
+  image.crossOrigin =
+    "anonymous";
 
-    cropScale = 1;
+  image.onload = () => {
 
-    document
-      .getElementById("zoomSlider")
-      .value = 1;
+    cropImage = image;
 
-    const displayedWidth =
-      width * baseScale;
-
-    const displayedHeight =
-      height * baseScale;
-
-    cropX = (
-      canvas.width -
-      displayedWidth
-    ) / 2;
-
-    cropY = (
-      canvas.height -
-      displayedHeight
-    ) / 2;
-
-  }
-
-  function resetCropEditor() {
-
-    cropImage = null;
-
-    cropScale = 1;
-
-    document
-      .getElementById("zoomSlider")
-      .value = 1;
-
-    ctx.clearRect(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
-    ctx.fillStyle = "#eeeeF5";
-
-    ctx.fillRect(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
-    ctx.fillStyle = "#777";
-
-    ctx.font = "bold 18px Arial";
-
-    ctx.textAlign = "center";
-
-    ctx.fillText(
-      "Choose a picture",
-      canvas.width / 2,
-      canvas.height / 2
-    );
-
-  }
-
-  function changeZoom(value) {
-
-    if (!cropImage) return;
-
-    const newScale =
-      Number(value);
-
-    const centerX =
-      canvas.width / 2;
-
-    const centerY =
-      canvas.height / 2;
-
-    const oldScale =
-      cropScale;
-
-    const ratio =
-      newScale / oldScale;
-
-    cropX =
-      centerX -
-      (centerX - cropX) * ratio;
-
-    cropY =
-      centerY -
-      (centerY - cropY) * ratio;
-
-    cropScale =
-      newScale;
+    setupImagePosition();
 
     drawCrop();
 
-  }
+  };
 
-  function drawCrop() {
+  image.onerror = () => {
 
-    ctx.clearRect(
-      0,
-      0,
-      canvas.width,
-      canvas.height
+    resetCropEditor();
+
+  };
+
+  image.src =
+    url +
+    (
+      url.includes("?")
+        ? "&"
+        : "?"
+    ) +
+    "editor=" +
+    Date.now();
+
+}
+
+function setupImagePosition() {
+
+  if (!cropImage) return;
+
+  const width =
+    cropImage.naturalWidth ||
+    cropImage.width;
+
+  const height =
+    cropImage.naturalHeight ||
+    cropImage.height;
+
+  baseScale =
+    Math.max(
+      canvas.width / width,
+      canvas.height / height
     );
 
-    if (!cropImage) {
+  cropScale = 1;
 
-      resetCropEditor();
+  document.getElementById(
+    "zoomSlider"
+  ).value = 1;
 
-      return;
+  cropX =
+    (
+      canvas.width -
+      width * baseScale
+    ) / 2;
 
-    }
+  cropY =
+    (
+      canvas.height -
+      height * baseScale
+    ) / 2;
 
-    const width =
-      cropImage.naturalWidth ||
-      cropImage.width;
+}
 
-    const height =
-      cropImage.naturalHeight ||
-      cropImage.height;
+function resetCropEditor() {
 
-    const drawWidth =
-      width *
-      baseScale *
-      cropScale;
+  cropImage = null;
 
-    const drawHeight =
-      height *
-      baseScale *
-      cropScale;
+  cropScale = 1;
 
-    ctx.save();
+  document.getElementById(
+    "zoomSlider"
+  ).value = 1;
 
-    ctx.beginPath();
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
 
-    ctx.arc(
-      canvas.width / 2,
-      canvas.height / 2,
-      canvas.width / 2,
-      0,
-      Math.PI * 2
-    );
+  ctx.fillStyle =
+    "#eeeeF5";
 
-    ctx.clip();
+  ctx.fillRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
 
-    ctx.drawImage(
-      cropImage,
-      cropX,
-      cropY,
-      drawWidth,
-      drawHeight
-    );
+  ctx.fillStyle =
+    "#777";
 
-    ctx.restore();
+  ctx.font =
+    "bold 18px Arial";
 
-  }
+  ctx.textAlign =
+    "center";
 
-  function setupCropDragging() {
+  ctx.fillText(
+    "Choose a picture",
+    canvas.width / 2,
+    canvas.height / 2
+  );
 
-    canvas.addEventListener(
-      "pointerdown",
-      event => {
+}
 
-        if (!cropImage) return;
+function changeZoom(value) {
 
-        dragging = true;
+  if (!cropImage) return;
 
-        canvas.setPointerCapture(
-          event.pointerId
-        );
+  const newScale =
+    Number(value);
 
-        dragStartX =
-          event.clientX;
+  const centerX =
+    canvas.width / 2;
 
-        dragStartY =
-          event.clientY;
+  const centerY =
+    canvas.height / 2;
 
-        startCropX =
-          cropX;
+  const ratio =
+    newScale / cropScale;
 
-        startCropY =
-          cropY;
+  cropX =
+    centerX -
+    (centerX - cropX) * ratio;
 
-      }
-    );
+  cropY =
+    centerY -
+    (centerY - cropY) * ratio;
 
-    canvas.addEventListener(
-      "pointermove",
-      event => {
+  cropScale =
+    newScale;
 
-        if (!dragging) return;
+  drawCrop();
 
-        cropX =
-          startCropX +
-          (
-            event.clientX -
-            dragStartX
-          );
+}
 
-        cropY =
-          startCropY +
-          (
-            event.clientY -
-            dragStartY
-          );
+function drawCrop() {
 
-        drawCrop();
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
 
-      }
-    );
+  if (!cropImage) {
 
-    canvas.addEventListener(
-      "pointerup",
-      () => {
-        dragging = false;
-      }
-    );
+    resetCropEditor();
 
-    canvas.addEventListener(
-      "pointercancel",
-      () => {
-        dragging = false;
-      }
-    );
+    return;
 
   }
 
-  async function saveProfilePicture() {
+  const width =
+    cropImage.naturalWidth ||
+    cropImage.width;
 
-    if (!currentUser) {
+  const height =
+    cropImage.naturalHeight ||
+    cropImage.height;
 
-      showToast(
-        "Please sign in first."
-      );
+  const drawWidth =
+    width *
+    baseScale *
+    cropScale;
 
-      return;
+  const drawHeight =
+    height *
+    baseScale *
+    cropScale;
 
-    }
+  ctx.save();
 
-    if (!cropImage) {
+  ctx.beginPath();
 
-      showToast(
-        "Choose a picture first."
-      );
+  ctx.arc(
+    canvas.width / 2,
+    canvas.height / 2,
+    canvas.width / 2,
+    0,
+    Math.PI * 2
+  );
 
-      return;
+  ctx.clip();
 
-    }
+  ctx.drawImage(
+    cropImage,
+    cropX,
+    cropY,
+    drawWidth,
+    drawHeight
+  );
 
-    try {
+  ctx.restore();
 
-      showToast(
-        "Uploading profile picture..."
-      );
+}
 
-      const blob =
-        await new Promise(resolve => {
+function setupCropDragging() {
 
-          canvas.toBlob(
-            resolve,
-            "image/jpeg",
-            0.90
-          );
-
-        });
-
-      if (!blob) {
-
-        throw new Error(
-          "Could not create the profile picture."
-        );
-
-      }
-
-      const path =
-        currentUser.id +
-        "/avatar.jpg";
-
-      const {
-        error: uploadError
-      } =
-        await supabaseClient.storage
-          .from(STORAGE_BUCKET)
-          .upload(
-            path,
-            blob,
-            {
-              contentType: "image/jpeg",
-              upsert: true,
-              cacheControl: "3600"
-            }
-          );
-
-      if (uploadError) {
-
-        throw uploadError;
-
-      }
-
-      const {
-        data: publicData
-      } =
-        supabaseClient.storage
-          .from(STORAGE_BUCKET)
-          .getPublicUrl(path);
-
-      const avatarUrl =
-        publicData.publicUrl +
-        "?v=" +
-        Date.now();
-
-      const current =
-        getProfileData();
-
-      const {
-        error: metadataError
-      } =
-        await supabaseClient.auth
-          .updateUser({
-
-            data: {
-
-              display_name:
-                current.displayName,
-
-              username:
-                current.username,
-
-              bio:
-                current.bio,
-
-              avatar_url:
-                avatarUrl,
-
-              avatar_path:
-                path
-
-            }
-
-          });
-
-      if (metadataError) {
-
-        throw metadataError;
-
-      }
-
-      await refreshCurrentUser();
-
-      closePfpEditor();
-
-      updateHeader();
-
-      showProfile();
-
-      showToast(
-        "Profile picture saved!"
-      );
-
-    } catch (error) {
-
-      console.error(error);
-
-      showToast(
-        error.message ||
-        "Could not save your profile picture."
-      );
-
-    }
-
-  }
-
-  async function removeProfilePicture() {
-
-    if (!currentUser) return;
-
-    const profile =
-      getProfileData();
-
-    try {
-
-      if (profile.avatarPath) {
-
-        const {
-          error
-        } =
-          await supabaseClient.storage
-            .from(STORAGE_BUCKET)
-            .remove([
-              profile.avatarPath
-            ]);
-
-        if (error) {
-          console.warn(error);
-        }
-
-      }
-
-      const {
-        error
-      } =
-        await supabaseClient.auth
-          .updateUser({
-
-            data: {
-
-              display_name:
-                profile.displayName,
-
-              username:
-                profile.username,
-
-              bio:
-                profile.bio,
-
-              avatar_url: null,
-
-              avatar_path: null
-
-            }
-
-          });
-
-      if (error) throw error;
-
-      await refreshCurrentUser();
-
-      resetCropEditor();
-
-      updateHeader();
-
-      showProfile();
-
-      showToast(
-        "Profile picture removed."
-      );
-
-      closePfpEditor();
-
-    } catch (error) {
-
-      showToast(
-        error.message ||
-        "Could not remove your profile picture."
-      );
-
-    }
-
-  }
-
-  async function refreshCurrentUser() {
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.auth
-        .getUser();
-
-    if (!error && data?.user) {
-
-      currentUser =
-        data.user;
-
-      updateHeader();
-
-    }
-
-  }
-
-  /* =========================================
-     ACCOUNT MENU
-  ========================================= */
-
-  function toggleAccountMenu() {
-
-    document
-      .getElementById("accountDropdown")
-      .classList.toggle("hidden");
-
-  }
-
-  function closeAccountMenu() {
-
-    document
-      .getElementById("accountDropdown")
-      .classList.add("hidden");
-
-  }
-
-  document.addEventListener(
-    "click",
+  canvas.addEventListener(
+    "pointerdown",
     event => {
 
-      const menu =
-        document.getElementById(
-          "accountDropdown"
-        );
+      if (!cropImage) return;
 
-      const button =
-        document.getElementById(
-          "accountButton"
-        );
+      dragging = true;
 
-      if (
-        !menu.contains(event.target) &&
-        !button.contains(event.target)
-      ) {
+      canvas.setPointerCapture(
+        event.pointerId
+      );
 
-        menu.classList.add("hidden");
+      dragStartX =
+        event.clientX;
 
-      }
+      dragStartY =
+        event.clientY;
+
+      startCropX =
+        cropX;
+
+      startCropY =
+        cropY;
 
     }
   );
 
-  /* =========================================
-     HELPERS
-  ========================================= */
+  canvas.addEventListener(
+    "pointermove",
+    event => {
 
-  function requireLogin(feature) {
+      if (!dragging) return;
 
-    if (!currentUser) {
+      cropX =
+        startCropX +
+        (
+          event.clientX -
+          dragStartX
+        );
 
-      showToast(
-        `Please sign in to use ${feature}.`
+      cropY =
+        startCropY +
+        (
+          event.clientY -
+          dragStartY
+        );
+
+      drawCrop();
+
+    }
+  );
+
+  canvas.addEventListener(
+    "pointerup",
+    () => {
+
+      dragging = false;
+
+    }
+  );
+
+  canvas.addEventListener(
+    "pointercancel",
+    () => {
+
+      dragging = false;
+
+    }
+  );
+
+}
+
+async function saveProfilePicture() {
+
+  if (!currentUser) {
+
+    showToast(
+      "Please sign in first."
+    );
+
+    return;
+
+  }
+
+  if (!cropImage) {
+
+    showToast(
+      "Choose a picture first."
+    );
+
+    return;
+
+  }
+
+  try {
+
+    showToast(
+      "Uploading profile picture..."
+    );
+
+    const blob =
+      await new Promise(
+        resolve => {
+
+          canvas.toBlob(
+            resolve,
+            "image/jpeg",
+            .90
+          );
+
+        }
       );
 
-      openAuth("signin");
+    if (!blob) {
 
-      return false;
+      throw new Error(
+        "Could not create profile picture."
+      );
 
     }
 
-    return true;
+    const path =
+      currentUser.id +
+      "/avatar.jpg";
 
-  }
+    const {
+      error: uploadError
+    } =
+      await supabaseClient.storage
+        .from(STORAGE_BUCKET)
+        .upload(
+          path,
+          blob,
+          {
+            contentType:
+              "image/jpeg",
 
-  function createUsername(name) {
+            upsert: true,
 
-    const clean =
-      name
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, "");
+            cacheControl:
+              "3600"
+          }
+        );
 
-    return (
-      clean ||
-      "vyro_user"
-    ) +
-    Math.floor(
-      Math.random() * 9999
-    );
+    if (uploadError) {
 
-  }
+      throw uploadError;
 
-  function handleSearch(event) {
+    }
 
-    if (event.key !== "Enter") return;
+    const {
+      data: publicData
+    } =
+      supabaseClient.storage
+        .from(STORAGE_BUCKET)
+        .getPublicUrl(path);
 
-    const value =
-      event.target.value.trim();
+    const avatarUrl =
+      publicData.publicUrl +
+      "?v=" +
+      Date.now();
 
-    if (!value) return;
+    const current =
+      getProfileData();
+
+    const {
+      error: metadataError
+    } =
+      await supabaseClient.auth
+        .updateUser({
+
+          data: {
+
+            display_name:
+              current.displayName,
+
+            username:
+              current.username,
+
+            bio:
+              current.bio,
+
+            avatar_url:
+              avatarUrl,
+
+            avatar_path:
+              path
+
+          }
+
+        });
+
+    if (metadataError) {
+
+      throw metadataError;
+
+    }
+
+    await refreshCurrentUser();
+
+    closePfpEditor();
+
+    updateHeader();
+
+    showProfile();
 
     showToast(
-      `Searching VYRO for "${value}"...`
+      "Profile picture saved!"
+    );
+
+  } catch(error) {
+
+    console.error(error);
+
+    showToast(
+      error.message ||
+      "Could not save your profile picture."
     );
 
   }
 
-  function showToast(message) {
+}
 
-    const toast =
-      document.getElementById("toast");
+async function removeProfilePicture() {
 
-    toast.textContent =
-      message;
+  if (!currentUser) return;
 
-    toast.classList.remove("hidden");
+  const profile =
+    getProfileData();
 
-    clearTimeout(
-      window.vyroToastTimer
+  try {
+
+    if (profile.avatarPath) {
+
+      await supabaseClient.storage
+        .from(STORAGE_BUCKET)
+        .remove([
+          profile.avatarPath
+        ]);
+
+    }
+
+    const {
+      error
+    } =
+      await supabaseClient.auth
+        .updateUser({
+
+          data: {
+
+            display_name:
+              profile.displayName,
+
+            username:
+              profile.username,
+
+            bio:
+              profile.bio,
+
+            avatar_url:
+              null,
+
+            avatar_path:
+              null
+
+          }
+
+        });
+
+    if (error) throw error;
+
+    await refreshCurrentUser();
+
+    resetCropEditor();
+
+    updateHeader();
+
+    showProfile();
+
+    closePfpEditor();
+
+    showToast(
+      "Profile picture removed."
     );
 
-    window.vyroToastTimer =
-      setTimeout(() => {
+  } catch(error) {
 
-        toast.classList.add("hidden");
+    showToast(
+      error.message ||
+      "Could not remove your profile picture."
+    );
 
-      }, 3500);
+  }
+
+}
+
+async function refreshCurrentUser() {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth
+      .getUser();
+
+  if (
+    !error &&
+    data?.user
+  ) {
+
+    currentUser =
+      data.user;
+
+    updateHeader();
 
   }
 
-  function escapeHTML(value) {
+}
 
-    return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+/* ========================================
+   ACCOUNT
+======================================== */
+
+function toggleAccountMenu() {
+
+  document
+    .getElementById(
+      "accountDropdown"
+    )
+    .classList.toggle(
+      "hidden"
+    );
+
+}
+
+function closeAccountMenu() {
+
+  document
+    .getElementById(
+      "accountDropdown"
+    )
+    .classList.add(
+      "hidden"
+    );
+
+}
+
+document.addEventListener(
+  "click",
+  event => {
+
+    const menu =
+      document.getElementById(
+        "accountDropdown"
+      );
+
+    const button =
+      document.getElementById(
+        "accountButton"
+      );
+
+    if (
+      !menu.contains(event.target) &&
+      !button.contains(event.target)
+    ) {
+
+      menu.classList.add(
+        "hidden"
+      );
+
+    }
 
   }
+);
+
+/* ========================================
+   HELPERS
+======================================== */
+
+function requireLogin(feature) {
+
+  if (!currentUser) {
+
+    showToast(
+      `Please sign in to use ${feature}.`
+    );
+
+    openAuth("signin");
+
+    return false;
+
+  }
+
+  return true;
+
+}
+
+function createUsername(name) {
+
+  const clean =
+    name
+      .toLowerCase()
+      .replace(
+        /[^a-z0-9]/g,
+        ""
+      );
+
+  return (
+    clean ||
+    "vyro_user"
+  ) +
+  Math.floor(
+    Math.random() * 9999
+  );
+
+}
+
+function handleSearch(event) {
+
+  if (event.key !== "Enter")
+    return;
+
+  const value =
+    event.target.value.trim();
+
+  if (!value) return;
+
+  showToast(
+    `Searching VYRO for "${value}"...`
+  );
+
+}
+
+function showToast(message) {
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+  toast.textContent =
+    message;
+
+  toast.classList.remove(
+    "hidden"
+  );
+
+  clearTimeout(
+    window.vyroToastTimer
+  );
+
+  window.vyroToastTimer =
+    setTimeout(
+      () => {
+
+        toast.classList.add(
+          "hidden"
+        );
+
+      },
+      3500
+    );
+
+}
+
+function escapeHTML(value) {
+
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
 </script>
 
 </body>
