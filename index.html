@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VYRO — Watch. Create. Connect.</title>
 
-  <title>VYRO — Watch. Create. Share.</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
@@ -15,12 +16,14 @@
       --green: #22c55e;
       --orange: #f97316;
       --yellow: #eab308;
+      --red: #ef4444;
 
       --text: #171717;
       --muted: #737373;
-      --border: #ececf1;
-      --background: #f8f9ff;
+      --border: #e9e9f0;
+      --background: #f7f8ff;
       --white: #ffffff;
+      --shadow: 0 12px 35px rgba(50, 50, 93, 0.08);
     }
 
     * {
@@ -29,16 +32,8 @@
       padding: 0;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
-      font-family:
-        Inter,
-        Arial,
-        Helvetica,
-        sans-serif;
+      font-family: Inter, Arial, Helvetica, sans-serif;
       background: var(--background);
       color: var(--text);
     }
@@ -52,843 +47,723 @@
       cursor: pointer;
     }
 
-    /* =========================
-       HEADER
-    ========================= */
+    /* HEADER */
 
-    .header {
-      height: 74px;
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border);
-
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      padding: 0 28px;
-
+    header {
       position: sticky;
       top: 0;
       z-index: 100;
+      height: 72px;
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 22px;
     }
 
     .logo {
-      font-size: 30px;
+      font-size: 28px;
       font-weight: 950;
-      letter-spacing: -2px;
-
-      background: linear-gradient(
-        90deg,
-        var(--blue),
-        var(--purple),
-        var(--pink)
-      );
-
+      letter-spacing: -1.5px;
+      background: linear-gradient(90deg, var(--blue), var(--purple), var(--pink));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-    }
-
-    .header-center {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      padding: 0 40px;
+      min-width: 90px;
     }
 
     .search {
-      width: min(600px, 100%);
-      height: 46px;
-
+      flex: 1;
+      max-width: 650px;
+      margin: auto;
       display: flex;
-      align-items: center;
-
-      background: #f5f6fb;
-      border: 1px solid #e6e7ee;
-      border-radius: 24px;
-
-      overflow: hidden;
-    }
-
-    .search:focus-within {
-      border-color: var(--purple);
-      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+      gap: 8px;
     }
 
     .search input {
-      flex: 1;
-      height: 100%;
-
-      border: 0;
+      width: 100%;
+      height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0 16px;
       outline: none;
-      background: transparent;
+      background: #fafaff;
+    }
 
-      padding: 0 18px;
-
-      font-size: 15px;
+    .search input:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 4px rgba(139,92,246,.10);
     }
 
     .search button {
-      width: 54px;
-      height: 100%;
-
+      width: 48px;
       border: 0;
-      background: transparent;
-
-      font-size: 20px;
+      border-radius: 14px;
+      color: white;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 9px;
+      gap: 10px;
     }
 
-    .icon-button {
+    .icon-btn {
       width: 42px;
       height: 42px;
-
-      border: 0;
-      border-radius: 50%;
-
-      background: transparent;
-
-      font-size: 19px;
-    }
-
-    .icon-button:hover {
-      background: #f1f1f6;
-    }
-
-    .signup-button,
-    .login-button {
-      padding: 11px 18px;
-      border-radius: 22px;
-      font-weight: 750;
-      transition: 0.2s;
-    }
-
-    .signup-button {
-      border: 1px solid #dedee7;
+      border: 1px solid var(--border);
       background: white;
+      border-radius: 13px;
+      font-size: 18px;
     }
 
-    .signup-button:hover {
-      background: #f4f3ff;
-      border-color: #c9c4ff;
-    }
-
-    .login-button {
+    .auth-btn {
+      height: 42px;
+      border-radius: 13px;
+      padding: 0 17px;
       border: 0;
+      font-weight: 800;
+    }
+
+    .signup {
       color: white;
-
-      background: linear-gradient(
-        135deg,
-        var(--blue),
-        var(--purple)
-      );
-
-      box-shadow: 0 6px 18px rgba(88, 101, 242, 0.25);
+      background: linear-gradient(135deg, var(--blue), var(--purple));
     }
 
-    .login-button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 22px rgba(88, 101, 242, 0.35);
+    .signin {
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--text);
     }
 
-    /* =========================
-       LAYOUT
-    ========================= */
+    .account-btn {
+      display: none;
+      align-items: center;
+      gap: 9px;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 13px;
+      padding: 6px 11px 6px 6px;
+      font-weight: 800;
+    }
+
+    .account-avatar {
+      width: 31px;
+      height: 31px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 900;
+    }
+
+    /* LAYOUT */
 
     .layout {
       display: flex;
-      min-height: calc(100vh - 74px);
+      min-height: calc(100vh - 72px);
     }
 
-    .sidebar {
-      width: 235px;
-
-      position: fixed;
-      top: 74px;
-      bottom: 0;
-
-      padding: 22px 14px;
-
+    aside {
+      width: 245px;
       background: white;
       border-right: 1px solid var(--border);
+      padding: 22px 14px;
+      position: sticky;
+      top: 72px;
+      height: calc(100vh - 72px);
+      overflow-y: auto;
     }
 
-    .nav-section {
-      margin-bottom: 27px;
-    }
-
-    .nav-title {
-      padding: 0 12px 9px;
-
-      color: #9696a2;
-
+    .side-title {
       font-size: 11px;
-      font-weight: 800;
-
+      color: #999;
+      font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      padding: 0 12px;
+      margin: 20px 0 8px;
+      letter-spacing: .8px;
+    }
+
+    .side-title:first-child {
+      margin-top: 0;
     }
 
     .nav-item {
       width: 100%;
-
+      border: 0;
+      background: transparent;
+      text-align: left;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 700;
       display: flex;
       align-items: center;
-
-      gap: 13px;
-
-      padding: 12px;
-
-      border: 0;
-      border-radius: 11px;
-
-      background: transparent;
-
-      color: #44444d;
-
-      font-weight: 650;
-
-      text-align: left;
-
-      transition: 0.2s;
+      gap: 12px;
+      margin-bottom: 3px;
     }
 
     .nav-item:hover {
-      background: #f4f4fb;
-      transform: translateX(2px);
+      background: #f4f4ff;
     }
 
     .nav-item.active {
-      background: linear-gradient(
-        90deg,
-        rgba(88, 101, 242, 0.12),
-        rgba(139, 92, 246, 0.08)
-      );
+      color: var(--blue);
+      background: #eef0ff;
+    }
 
+    main {
+      flex: 1;
+      min-width: 0;
+      padding: 28px;
+      max-width: 1500px;
+      margin: auto;
+    }
+
+    /* HERO */
+
+    .hero {
+      border-radius: 28px;
+      padding: 42px;
+      color: white;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(255,255,255,.25), transparent 30%),
+        radial-gradient(circle at 10% 100%, rgba(6,182,212,.35), transparent 35%),
+        linear-gradient(125deg, #5865f2, #8b5cf6 45%, #ec4899);
+      box-shadow: 0 20px 50px rgba(88,101,242,.20);
+      margin-bottom: 28px;
+    }
+
+    .hero small {
+      font-weight: 800;
+      opacity: .9;
+    }
+
+    .hero h1 {
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1;
+      margin: 12px 0;
+      letter-spacing: -2px;
+    }
+
+    .hero p {
+      max-width: 650px;
+      font-size: 17px;
+      opacity: .93;
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+
+    .hero-btn {
+      padding: 13px 19px;
+      border: 0;
+      border-radius: 13px;
+      font-weight: 900;
+    }
+
+    .hero-btn.primary {
+      background: white;
       color: var(--blue);
     }
 
-    .nav-icon {
-      width: 23px;
-      text-align: center;
-      font-size: 18px;
-    }
-
-    /* =========================
-       MAIN
-    ========================= */
-
-    .main {
-      margin-left: 235px;
-      width: calc(100% - 235px);
-
-      padding: 30px;
-    }
-
-    .welcome {
-      position: relative;
-      overflow: hidden;
-
-      padding: 34px;
-
-      border-radius: 22px;
-
-      background:
-        radial-gradient(
-          circle at 85% 20%,
-          rgba(236, 72, 153, 0.3),
-          transparent 30%
-        ),
-        radial-gradient(
-          circle at 60% 100%,
-          rgba(6, 182, 212, 0.3),
-          transparent 30%
-        ),
-        linear-gradient(
-          135deg,
-          #5967f2,
-          #8059e9 50%,
-          #ec4899
-        );
-
+    .hero-btn.secondary {
+      background: rgba(255,255,255,.17);
       color: white;
-
-      margin-bottom: 25px;
-
-      box-shadow: 0 16px 40px rgba(88, 101, 242, 0.2);
+      border: 1px solid rgba(255,255,255,.3);
     }
 
-    .welcome h1 {
-      font-size: 35px;
-      letter-spacing: -1.3px;
-      margin-bottom: 8px;
-    }
-
-    .welcome p {
-      opacity: 0.9;
-      font-size: 16px;
-    }
-
-    .welcome-badge {
-      display: inline-block;
-
-      margin-top: 18px;
-
-      padding: 7px 12px;
-
-      border-radius: 20px;
-
-      background: rgba(255, 255, 255, 0.17);
-
-      font-size: 12px;
-      font-weight: 750;
-    }
-
-    /* =========================
-       CATEGORIES
-    ========================= */
+    /* CATEGORIES */
 
     .categories {
       display: flex;
       gap: 9px;
-
       overflow-x: auto;
-
-      padding: 2px 0 25px;
+      padding-bottom: 8px;
+      margin-bottom: 26px;
     }
 
     .category {
-      border: 0;
-
-      padding: 9px 16px;
-
-      border-radius: 20px;
-
+      border: 1px solid var(--border);
       background: white;
-
-      border: 1px solid #e8e8ef;
-
+      padding: 9px 15px;
+      border-radius: 999px;
       white-space: nowrap;
-
-      font-weight: 650;
-
-      transition: 0.2s;
-    }
-
-    .category:hover {
-      transform: translateY(-1px);
-      border-color: #cfcdf8;
+      font-weight: 750;
     }
 
     .category.active {
       color: white;
-
-      border: 0;
-
-      background: linear-gradient(
-        135deg,
-        var(--blue),
-        var(--purple)
-      );
-
-      box-shadow: 0 5px 15px rgba(88, 101, 242, 0.2);
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
     }
 
-    /* =========================
-       SECTIONS
-    ========================= */
+    /* SECTION */
 
-    .section-heading {
+    .section-head {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-
-      margin-bottom: 18px;
+      align-items: center;
+      margin-bottom: 17px;
     }
 
-    .section-heading h2 {
+    .section-head h2 {
       font-size: 22px;
-      letter-spacing: -0.5px;
     }
 
-    .view-all {
-      border: 0;
-      background: transparent;
-
+    .section-head span {
       color: var(--blue);
-
-      font-weight: 750;
-    }
-
-    /* =========================
-       VIDEOS
-    ========================= */
-
-    .video-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-
-      gap: 27px 18px;
-    }
-
-    .video-card {
-      min-width: 0;
+      font-weight: 800;
       cursor: pointer;
     }
 
-    .thumbnail {
-      width: 100%;
-      aspect-ratio: 16 / 9;
+    /* VIDEOS */
 
-      border-radius: 14px;
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
+      gap: 20px;
+    }
 
-      position: relative;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
+    .video-card {
+      background: white;
+      border-radius: 18px;
       overflow: hidden;
+      border: 1px solid var(--border);
+      transition: .2s ease;
+    }
 
+    .video-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .thumbnail {
+      aspect-ratio: 16/9;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 12px;
       color: white;
-
-      font-size: 31px;
-
-      transition: 0.25s;
-
-      box-shadow:
-        0 7px 20px rgba(0, 0, 0, 0.08);
+      background: linear-gradient(135deg, #5865f2, #ec4899);
     }
 
-    .video-card:nth-child(1) .thumbnail {
-      background:
-        linear-gradient(
-          135deg,
-          #5967f2,
-          #8b5cf6
-        );
+    .thumbnail.one {
+      background: linear-gradient(135deg, #06b6d4, #5865f2);
     }
 
-    .video-card:nth-child(2) .thumbnail {
-      background:
-        linear-gradient(
-          135deg,
-          #06b6d4,
-          #3b82f6
-        );
+    .thumbnail.two {
+      background: linear-gradient(135deg, #f97316, #ec4899);
     }
 
-    .video-card:nth-child(3) .thumbnail {
-      background:
-        linear-gradient(
-          135deg,
-          #ec4899,
-          #8b5cf6
-        );
+    .thumbnail.three {
+      background: linear-gradient(135deg, #22c55e, #06b6d4);
     }
 
-    .video-card:nth-child(4) .thumbnail {
-      background:
-        linear-gradient(
-          135deg,
-          #f97316,
-          #eab308
-        );
+    .thumbnail.four {
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
     }
 
-    .video-card:hover .thumbnail {
-      transform: translateY(-3px);
-      box-shadow:
-        0 12px 30px rgba(0, 0, 0, 0.14);
+    .play {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.95);
+      color: var(--purple);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      margin: auto;
     }
 
     .duration {
-      position: absolute;
-
-      bottom: 8px;
-      right: 8px;
-
+      background: rgba(0,0,0,.75);
       padding: 4px 7px;
-
-      border-radius: 5px;
-
-      background: rgba(0, 0, 0, 0.75);
-
-      color: white;
-
-      font-size: 12px;
-      font-weight: 750;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
     }
 
     .video-info {
-      display: flex;
-      gap: 11px;
-
-      padding-top: 11px;
+      padding: 13px;
     }
 
-    .creator-avatar {
-      width: 38px;
-      height: 38px;
-
-      min-width: 38px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      border-radius: 50%;
-
-      color: white;
-
-      font-size: 13px;
-      font-weight: 850;
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--blue),
-          var(--pink)
-        );
-    }
-
-    .video-card:nth-child(2) .creator-avatar {
-      background:
-        linear-gradient(
-          135deg,
-          var(--cyan),
-          var(--blue)
-        );
-    }
-
-    .video-card:nth-child(3) .creator-avatar {
-      background:
-        linear-gradient(
-          135deg,
-          var(--pink),
-          var(--purple)
-        );
-    }
-
-    .video-card:nth-child(4) .creator-avatar {
-      background:
-        linear-gradient(
-          135deg,
-          var(--orange),
-          var(--yellow)
-        );
-    }
-
-    .video-title {
+    .video-info h3 {
       font-size: 15px;
       line-height: 1.35;
-
-      font-weight: 750;
-
-      margin-bottom: 5px;
+      margin-bottom: 7px;
     }
 
-    .creator-name,
-    .video-stats {
+    .video-info p {
       color: var(--muted);
-
       font-size: 13px;
-
-      line-height: 1.5;
     }
 
-    /* =========================
-       SHORTS
-    ========================= */
+    /* SHORTS */
 
     .shorts-section {
-      margin-top: 48px;
+      margin-top: 38px;
     }
 
     .shorts-grid {
       display: grid;
-
-      grid-template-columns:
-        repeat(6, minmax(0, 1fr));
-
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       gap: 15px;
     }
 
     .short-card {
-      cursor: pointer;
-    }
-
-    .short-thumbnail {
-      aspect-ratio: 9 / 15;
-
-      position: relative;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
+      aspect-ratio: 9/15;
+      border-radius: 19px;
       overflow: hidden;
-
-      border-radius: 14px;
-
       color: white;
-
-      font-size: 27px;
-
-      transition: 0.25s;
-
-      box-shadow:
-        0 7px 20px rgba(0, 0, 0, 0.08);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow);
     }
 
-    .short-card:nth-child(1) .short-thumbnail {
-      background:
-        linear-gradient(
-          160deg,
-          #ec4899,
-          #8b5cf6
-        );
+    .short-card:nth-child(1) {
+      background: linear-gradient(160deg, #5865f2, #ec4899);
     }
 
-    .short-card:nth-child(2) .short-thumbnail {
-      background:
-        linear-gradient(
-          160deg,
-          #06b6d4,
-          #3b82f6
-        );
+    .short-card:nth-child(2) {
+      background: linear-gradient(160deg, #06b6d4, #8b5cf6);
     }
 
-    .short-card:nth-child(3) .short-thumbnail {
-      background:
-        linear-gradient(
-          160deg,
-          #f97316,
-          #ec4899
-        );
+    .short-card:nth-child(3) {
+      background: linear-gradient(160deg, #f97316, #eab308);
     }
 
-    .short-card:nth-child(4) .short-thumbnail {
-      background:
-        linear-gradient(
-          160deg,
-          #22c55e,
-          #06b6d4
-        );
+    .short-card:nth-child(4) {
+      background: linear-gradient(160deg, #22c55e, #06b6d4);
     }
 
-    .short-card:nth-child(5) .short-thumbnail {
-      background:
-        linear-gradient(
-          160deg,
-          #eab308,
-          #f97316
-        );
+    .short-card:nth-child(5) {
+      background: linear-gradient(160deg, #ec4899, #8b5cf6);
     }
 
-    .short-card:nth-child(6) .short-thumbnail {
-      background:
-        linear-gradient(
-          160deg,
-          #8b5cf6,
-          #3b82f6
-        );
+    .short-play {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.9);
+      color: var(--purple);
+      display: grid;
+      place-items: center;
+      margin: auto;
     }
 
-    .short-card:hover .short-thumbnail {
-      transform: translateY(-4px);
-      box-shadow:
-        0 14px 30px rgba(0, 0, 0, 0.15);
-    }
-
-    .short-info {
-      padding-top: 9px;
-    }
-
-    .short-title {
-      font-size: 14px;
-      line-height: 1.35;
-      font-weight: 750;
-    }
-
-    .short-views {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 4px;
-    }
-
-    /* =========================
-       CREATOR AREA
-    ========================= */
+    /* CREATOR */
 
     .creator-banner {
-      margin-top: 52px;
-
+      margin-top: 38px;
+      border-radius: 24px;
+      padding: 28px;
+      background: white;
+      border: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-
       gap: 20px;
-
-      padding: 28px;
-
-      border-radius: 20px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #ffffff,
-          #f2efff
-        );
-
-      border: 1px solid #e2defb;
-
-      box-shadow:
-        0 10px 30px rgba(88, 101, 242, 0.06);
     }
 
-    .creator-banner h2 {
+    .creator-content h2 {
       margin-bottom: 7px;
-      font-size: 21px;
     }
 
-    .creator-banner p {
+    .creator-content p {
       color: var(--muted);
-      font-size: 14px;
+      line-height: 1.5;
     }
 
-    .studio-button {
+    .create-button {
       border: 0;
-
-      padding: 13px 20px;
-
-      border-radius: 11px;
-
       color: white;
-
-      font-weight: 750;
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--blue),
-          var(--purple)
-        );
-
-      box-shadow:
-        0 7px 18px rgba(88, 101, 242, 0.22);
-
+      font-weight: 900;
+      padding: 13px 18px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--orange), var(--pink));
       white-space: nowrap;
     }
 
-    .studio-button:hover {
-      transform: translateY(-2px);
-    }
-
-    /* =========================
-       FOOTER
-    ========================= */
+    /* FOOTER */
 
     footer {
-      margin-top: 60px;
-
-      padding: 28px 0;
-
+      margin-top: 50px;
+      padding: 28px 5px;
       border-top: 1px solid var(--border);
-
-      color: #9999a5;
-
+      color: var(--muted);
       font-size: 13px;
     }
 
-    /* =========================
-       RESPONSIVE
-    ========================= */
+    /* MODAL */
 
-    @media (max-width: 1200px) {
-
-      .video-grid {
-        grid-template-columns:
-          repeat(3, minmax(0, 1fr));
-      }
-
-      .shorts-grid {
-        grid-template-columns:
-          repeat(5, minmax(0, 1fr));
-      }
-
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,20,.60);
+      backdrop-filter: blur(7px);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
     }
 
-    @media (max-width: 900px) {
-
-      .sidebar {
-        width: 76px;
-      }
-
-      .sidebar .nav-item span:not(.nav-icon),
-      .nav-title {
-        display: none;
-      }
-
-      .nav-item {
-        justify-content: center;
-      }
-
-      .main {
-        margin-left: 76px;
-        width: calc(100% - 76px);
-      }
-
-      .video-grid {
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
-      }
-
-      .shorts-grid {
-        grid-template-columns:
-          repeat(4, minmax(0, 1fr));
-      }
-
-      .header-center {
-        padding: 0 15px;
-      }
-
+    .modal-overlay.show {
+      display: flex;
     }
 
-    @media (max-width: 650px) {
+    .modal {
+      width: 100%;
+      max-width: 440px;
+      background: white;
+      border-radius: 25px;
+      padding: 30px;
+      box-shadow: 0 30px 90px rgba(0,0,0,.25);
+      position: relative;
+      animation: modalIn .2s ease;
+    }
 
-      .header {
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .close {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      border: 0;
+      background: #f2f2f5;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      font-size: 18px;
+    }
+
+    .modal-logo {
+      font-size: 30px;
+      font-weight: 950;
+      background: linear-gradient(90deg, var(--blue), var(--purple), var(--pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .modal h2 {
+      margin-bottom: 7px;
+    }
+
+    .modal-subtitle {
+      color: var(--muted);
+      margin-bottom: 23px;
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .field {
+      margin-bottom: 15px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 850;
+      margin-bottom: 7px;
+    }
+
+    .field input {
+      width: 100%;
+      height: 46px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0 13px;
+      outline: none;
+    }
+
+    .field input:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 4px rgba(139,92,246,.10);
+    }
+
+    .submit {
+      width: 100%;
+      height: 47px;
+      border: 0;
+      border-radius: 13px;
+      color: white;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--blue), var(--purple), var(--pink));
+      margin-top: 5px;
+    }
+
+    .submit:disabled {
+      opacity: .65;
+      cursor: wait;
+    }
+
+    .switch {
+      text-align: center;
+      margin-top: 17px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .switch button {
+      border: 0;
+      background: none;
+      color: var(--blue);
+      font-weight: 900;
+    }
+
+    .message {
+      display: none;
+      margin-bottom: 15px;
+      padding: 11px 13px;
+      border-radius: 11px;
+      font-size: 13px;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      color: #991b1b;
+      background: #fee2e2;
+    }
+
+    .message.success {
+      color: #166534;
+      background: #dcfce7;
+    }
+
+    /* ACCOUNT MENU */
+
+    .account-menu {
+      position: fixed;
+      top: 68px;
+      right: 20px;
+      width: 275px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.15);
+      padding: 12px;
+      z-index: 300;
+      display: none;
+    }
+
+    .account-menu.show {
+      display: block;
+    }
+
+    .account-header {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+
+    .account-name {
+      font-weight: 900;
+    }
+
+    .account-email {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .menu-option {
+      width: 100%;
+      text-align: left;
+      padding: 11px 12px;
+      border: 0;
+      background: transparent;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    .menu-option:hover {
+      background: #f5f5fa;
+    }
+
+    .menu-option.logout {
+      color: var(--red);
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 850px) {
+      header {
         padding: 0 14px;
+        gap: 10px;
       }
 
-      .header-center {
+      .logo {
+        min-width: auto;
+      }
+
+      .search {
         display: none;
       }
 
-      .sidebar {
+      aside {
         display: none;
       }
 
-      .main {
-        margin-left: 0;
-        width: 100%;
-        padding: 18px 15px;
+      main {
+        padding: 17px;
       }
 
-      .welcome {
-        padding: 26px;
+      .hero {
+        padding: 28px 23px;
+        border-radius: 22px;
       }
 
-      .welcome h1 {
-        font-size: 28px;
+      .hero h1 {
+        font-size: 39px;
+      }
+
+      .creator-banner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .auth-btn.signin {
+        display: none;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .header-actions .icon-btn {
+        display: none;
+      }
+
+      .signup {
+        padding: 0 12px;
       }
 
       .video-grid {
@@ -896,19 +771,8 @@
       }
 
       .shorts-grid {
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, 1fr);
       }
-
-      .creator-banner {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .signup-button {
-        display: none;
-      }
-
     }
   </style>
 </head>
@@ -917,586 +781,894 @@
 
   <!-- HEADER -->
 
-  <header class="header">
+  <header>
+    <div class="logo">VYRO</div>
 
-    <div class="logo">
-      VYRO
-    </div>
-
-    <div class="header-center">
-
-      <div class="search">
-
-        <input
-          id="searchInput"
-          type="search"
-          placeholder="Search VYRO"
-          aria-label="Search VYRO"
-        >
-
-        <button
-          onclick="searchVYRO()"
-          aria-label="Search"
-        >
-          🔎
-        </button>
-
-      </div>
-
+    <div class="search">
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search VYRO..."
+        onkeydown="if(event.key === 'Enter') searchVYRO()"
+      >
+      <button onclick="searchVYRO()">⌕</button>
     </div>
 
     <div class="header-actions">
 
-      <button
-        class="icon-button"
-        title="Notifications"
-      >
+      <button class="icon-btn" onclick="showComingSoon('Notifications')">
         🔔
       </button>
 
       <button
-        class="signup-button"
+        class="auth-btn signin"
+        id="signInButton"
+        onclick="openLogin()"
+      >
+        Sign in
+      </button>
+
+      <button
+        class="auth-btn signup"
+        id="signUpButton"
         onclick="openSignup()"
       >
         Sign up
       </button>
 
       <button
-        class="login-button"
-        onclick="openLogin()"
+        class="account-btn"
+        id="accountButton"
+        onclick="toggleAccountMenu()"
       >
-        Sign in
+        <span class="account-avatar" id="accountAvatar">V</span>
+        <span id="accountButtonName">Account</span>
       </button>
 
     </div>
-
   </header>
 
+  <!-- ACCOUNT MENU -->
 
-  <!-- PAGE -->
+  <div class="account-menu" id="accountMenu">
+
+    <div class="account-header">
+      <div class="account-name" id="menuName">VYRO User</div>
+      <div class="account-email" id="menuEmail">user@example.com</div>
+    </div>
+
+    <button class="menu-option" onclick="openProfile()">
+      👤 My profile
+    </button>
+
+    <button class="menu-option" onclick="showComingSoon('VYRO Studio')">
+      🎬 VYRO Studio
+    </button>
+
+    <button class="menu-option" onclick="showComingSoon('Account settings')">
+      ⚙️ Account settings
+    </button>
+
+    <button class="menu-option logout" onclick="signOutUser()">
+      🚪 Sign out
+    </button>
+
+  </div>
 
   <div class="layout">
 
-
     <!-- SIDEBAR -->
 
-    <aside class="sidebar">
+    <aside>
 
-      <div class="nav-section">
+      <div class="side-title">Discover</div>
 
-        <button class="nav-item active">
-          <span class="nav-icon">🏠</span>
-          <span>Home</span>
-        </button>
+      <button class="nav-item active" onclick="goHome()">
+        🏠 Home
+      </button>
 
-        <button class="nav-item">
-          <span class="nav-icon">▶️</span>
-          <span>Shorts</span>
-        </button>
+      <button class="nav-item" onclick="showComingSoon('Shorts')">
+        ▶️ Shorts
+      </button>
 
-        <button class="nav-item">
-          <span class="nav-icon">📺</span>
-          <span>Subscriptions</span>
-        </button>
+      <button class="nav-item" onclick="requireLogin('Subscriptions')">
+        ⭐ Subscriptions
+      </button>
 
-      </div>
+      <div class="side-title">You</div>
 
+      <button class="nav-item" onclick="requireLogin('History')">
+        🕘 History
+      </button>
 
-      <div class="nav-section">
+      <button class="nav-item" onclick="requireLogin('Liked videos')">
+        ❤️ Liked videos
+      </button>
 
-        <div class="nav-title">
-          You
-        </div>
+      <button class="nav-item" onclick="requireLogin('Playlists')">
+        📁 Playlists
+      </button>
 
-        <button class="nav-item">
-          <span class="nav-icon">🕘</span>
-          <span>History</span>
-        </button>
+      <div class="side-title">Create</div>
 
-        <button class="nav-item">
-          <span class="nav-icon">❤️</span>
-          <span>Liked videos</span>
-        </button>
+      <button class="nav-item" onclick="requireLogin('Upload')">
+        ⬆️ Upload
+      </button>
 
-        <button class="nav-item">
-          <span class="nav-icon">📚</span>
-          <span>Playlists</span>
-        </button>
-
-      </div>
-
-
-      <div class="nav-section">
-
-        <div class="nav-title">
-          Create
-        </div>
-
-        <button
-          class="nav-item"
-          onclick="openSignup()"
-        >
-          <span class="nav-icon">➕</span>
-          <span>Upload</span>
-        </button>
-
-        <button
-          class="nav-item"
-          onclick="openSignup()"
-        >
-          <span class="nav-icon">🎛️</span>
-          <span>VYRO Studio</span>
-        </button>
-
-      </div>
+      <button class="nav-item" onclick="requireLogin('VYRO Studio')">
+        🎬 VYRO Studio
+      </button>
 
     </aside>
 
-
     <!-- MAIN -->
 
-    <main class="main">
+    <main>
 
+      <section class="hero">
 
-      <!-- WELCOME -->
+        <small>WELCOME TO VYRO</small>
 
-      <section class="welcome">
-
-        <h1>
-          Welcome to VYRO
-        </h1>
+        <h1>Watch. Create.<br>Connect.</h1>
 
         <p>
-          Watch. Create. Share.
+          Discover videos, follow creators, watch Shorts and build your own
+          audience on VYRO.
         </p>
 
-        <span class="welcome-badge">
-          ✨ Your new home for video
-        </span>
+        <div class="hero-actions">
+
+          <button
+            class="hero-btn primary"
+            onclick="openSignup()"
+          >
+            Create your account
+          </button>
+
+          <button
+            class="hero-btn secondary"
+            onclick="showComingSoon('Explore')"
+          >
+            Explore VYRO
+          </button>
+
+        </div>
 
       </section>
-
 
       <!-- CATEGORIES -->
 
       <div class="categories">
 
-        <button class="category active">
-          All
-        </button>
-
-        <button class="category">
-          🎮 Gaming
-        </button>
-
-        <button class="category">
-          🎵 Music
-        </button>
-
-        <button class="category">
-          😂 Entertainment
-        </button>
-
-        <button class="category">
-          ⚽ Sports
-        </button>
-
-        <button class="category">
-          📰 News
-        </button>
-
-        <button class="category">
-          💻 Technology
-        </button>
-
-        <button class="category">
-          📚 Education
-        </button>
+        <button class="category active">All</button>
+        <button class="category">Gaming</button>
+        <button class="category">Music</button>
+        <button class="category">Entertainment</button>
+        <button class="category">Technology</button>
+        <button class="category">Sports</button>
+        <button class="category">Education</button>
+        <button class="category">News</button>
 
       </div>
-
 
       <!-- RECOMMENDED -->
 
       <section>
 
-        <div class="section-heading">
-
-          <h2>
-            Recommended
-          </h2>
-
-          <button class="view-all">
-            View all
-          </button>
-
+        <div class="section-head">
+          <h2>Recommended for you</h2>
+          <span onclick="showComingSoon('More videos')">See all</span>
         </div>
-
 
         <div class="video-grid">
 
-
-          <article class="video-card">
-
-            <div class="thumbnail">
-
-              ▶️
-
-              <span class="duration">
-                12:45
-              </span>
-
+          <article class="video-card" onclick="showComingSoon('Video player')">
+            <div class="thumbnail one">
+              <div class="play">▶</div>
+              <span class="duration">12:42</span>
             </div>
-
             <div class="video-info">
-
-              <div class="creator-avatar">
-                V
-              </div>
-
-              <div>
-
-                <div class="video-title">
-                  Your first video on VYRO
-                </div>
-
-                <div class="creator-name">
-                  VYRO
-                </div>
-
-                <div class="video-stats">
-                  125K views · 2 days ago
-                </div>
-
-              </div>
-
+              <h3>The Ultimate Gaming Setup Guide</h3>
+              <p>VYRO Gaming • 124K views</p>
             </div>
-
           </article>
 
-
-          <article class="video-card">
-
-            <div class="thumbnail">
-
-              ▶️
-
-              <span class="duration">
-                8:32
-              </span>
-
+          <article class="video-card" onclick="showComingSoon('Video player')">
+            <div class="thumbnail two">
+              <div class="play">▶</div>
+              <span class="duration">8:17</span>
             </div>
-
             <div class="video-info">
-
-              <div class="creator-avatar">
-                G
-              </div>
-
-              <div>
-
-                <div class="video-title">
-                  The ultimate gaming setup
-                </div>
-
-                <div class="creator-name">
-                  Gaming Creator
-                </div>
-
-                <div class="video-stats">
-                  82K views · 5 hours ago
-                </div>
-
-              </div>
-
+              <h3>Building Something Amazing From Scratch</h3>
+              <p>Creator Studio • 87K views</p>
             </div>
-
           </article>
 
-
-          <article class="video-card">
-
-            <div class="thumbnail">
-
-              ▶️
-
-              <span class="duration">
-                15:21
-              </span>
-
+          <article class="video-card" onclick="showComingSoon('Video player')">
+            <div class="thumbnail three">
+              <div class="play">▶</div>
+              <span class="duration">15:03</span>
             </div>
-
             <div class="video-info">
-
-              <div class="creator-avatar">
-                T
-              </div>
-
-              <div>
-
-                <div class="video-title">
-                  Building something amazing
-                </div>
-
-                <div class="creator-name">
-                  Tech Creator
-                </div>
-
-                <div class="video-stats">
-                  241K views · 1 day ago
-                </div>
-
-              </div>
-
+              <h3>10 Things You Need To Know</h3>
+              <p>VYRO Creators • 241K views</p>
             </div>
-
           </article>
 
-
-          <article class="video-card">
-
-            <div class="thumbnail">
-
-              ▶️
-
-              <span class="duration">
-                21:04
-              </span>
-
+          <article class="video-card" onclick="showComingSoon('Video player')">
+            <div class="thumbnail four">
+              <div class="play">▶</div>
+              <span class="duration">6:31</span>
             </div>
-
             <div class="video-info">
-
-              <div class="creator-avatar">
-                C
-              </div>
-
-              <div>
-
-                <div class="video-title">
-                  A day in the life
-                </div>
-
-                <div class="creator-name">
-                  Creator Central
-                </div>
-
-                <div class="video-stats">
-                  94K views · 3 days ago
-                </div>
-
-              </div>
-
+              <h3>A Day In The Life Of A Creator</h3>
+              <p>Kryton • 53K views</p>
             </div>
-
           </article>
-
 
         </div>
 
       </section>
-
 
       <!-- SHORTS -->
 
       <section class="shorts-section">
 
-        <div class="section-heading">
-
-          <h2>
-            Shorts
-          </h2>
-
-          <button class="view-all">
-            View all
-          </button>
-
+        <div class="section-head">
+          <h2>Shorts</h2>
+          <span onclick="showComingSoon('Shorts')">View all</span>
         </div>
-
 
         <div class="shorts-grid">
 
+          <div class="short-card" onclick="showComingSoon('Short')">
+            <span>🔥 Trending</span>
+            <div class="short-play">▶</div>
+            <strong>That was unexpected...</strong>
+          </div>
 
-          <article class="short-card">
+          <div class="short-card" onclick="showComingSoon('Short')">
+            <span>🎮 Gaming</span>
+            <div class="short-play">▶</div>
+            <strong>Best gaming moment</strong>
+          </div>
 
-            <div class="short-thumbnail">
-              ▶️
-            </div>
+          <div class="short-card" onclick="showComingSoon('Short')">
+            <span>😂 Funny</span>
+            <div class="short-play">▶</div>
+            <strong>You won't believe this</strong>
+          </div>
 
-            <div class="short-info">
+          <div class="short-card" onclick="showComingSoon('Short')">
+            <span>🚀 Tech</span>
+            <div class="short-play">▶</div>
+            <strong>New tech explained</strong>
+          </div>
 
-              <div class="short-title">
-                This changed everything...
-              </div>
-
-              <div class="short-views">
-                1.2M views
-              </div>
-
-            </div>
-
-          </article>
-
-
-          <article class="short-card">
-
-            <div class="short-thumbnail">
-              ▶️
-            </div>
-
-            <div class="short-info">
-
-              <div class="short-title">
-                Wait until the end!
-              </div>
-
-              <div class="short-views">
-                842K views
-              </div>
-
-            </div>
-
-          </article>
-
-
-          <article class="short-card">
-
-            <div class="short-thumbnail">
-              ▶️
-            </div>
-
-            <div class="short-info">
-
-              <div class="short-title">
-                Gaming moment 😂
-              </div>
-
-              <div class="short-views">
-                526K views
-              </div>
-
-            </div>
-
-          </article>
-
-
-          <article class="short-card">
-
-            <div class="short-thumbnail">
-              ▶️
-            </div>
-
-            <div class="short-info">
-
-              <div class="short-title">
-                You need to see this
-              </div>
-
-              <div class="short-views">
-                319K views
-              </div>
-
-            </div>
-
-          </article>
-
-
-          <article class="short-card">
-
-            <div class="short-thumbnail">
-              ▶️
-            </div>
-
-            <div class="short-info">
-
-              <div class="short-title">
-                Insane!
-              </div>
-
-              <div class="short-views">
-                207K views
-              </div>
-
-            </div>
-
-          </article>
-
-
-          <article class="short-card">
-
-            <div class="short-thumbnail">
-              ▶️
-            </div>
-
-            <div class="short-info">
-
-              <div class="short-title">
-                How did they do that?
-              </div>
-
-              <div class="short-views">
-                156K views
-              </div>
-
-            </div>
-
-          </article>
-
+          <div class="short-card" onclick="showComingSoon('Short')">
+            <span>✨ VYRO</span>
+            <div class="short-play">▶</div>
+            <strong>Welcome to VYRO</strong>
+          </div>
 
         </div>
 
       </section>
 
-
       <!-- CREATOR -->
 
       <section class="creator-banner">
 
-        <div>
+        <div class="creator-content">
 
-          <h2>
-            Ready to become a creator?
-          </h2>
+          <h2>Ready to become a creator?</h2>
 
           <p>
-            Upload videos, create Shorts and build your audience on VYRO.
+            Upload videos, publish Shorts, build your audience and eventually
+            unlock VYRO's creator monetisation features.
           </p>
 
         </div>
 
         <button
-          class="studio-button"
-          onclick="openSignup()"
+          class="create-button"
+          onclick="requireLogin('Creator Studio')"
         >
           Start creating
         </button>
 
       </section>
 
-
       <footer>
-        © 2026 VYRO · Watch. Create. Share.
+        © 2026 VYRO. Watch. Create. Connect.
       </footer>
-
 
     </main>
 
   </div>
 
+  <!-- AUTH MODAL -->
+
+  <div class="modal-overlay" id="authModal">
+
+    <div class="modal">
+
+      <button class="close" onclick="closeAuth()">×</button>
+
+      <div class="modal-logo">VYRO</div>
+
+      <h2 id="authTitle">Welcome back</h2>
+
+      <p class="modal-subtitle" id="authSubtitle">
+        Sign in to your VYRO account.
+      </p>
+
+      <div class="message" id="authMessage"></div>
+
+      <form id="authForm" onsubmit="handleAuth(event)">
+
+        <div class="field" id="nameField" style="display:none;">
+          <label for="displayName">Display name</label>
+          <input
+            id="displayName"
+            type="text"
+            placeholder="Your VYRO name"
+            maxlength="50"
+          >
+        </div>
+
+        <div class="field">
+
+          <label for="email">Email address</label>
+
+          <input
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label for="password">Password</label>
+
+          <input
+            id="password"
+            type="password"
+            placeholder="At least 6 characters"
+            minlength="6"
+            required
+            autocomplete="current-password"
+          >
+
+        </div>
+
+        <button
+          class="submit"
+          id="authSubmit"
+          type="submit"
+        >
+          Sign in
+        </button>
+
+      </form>
+
+      <div class="switch">
+
+        <span id="switchText">Don't have an account?</span>
+
+        <button
+          id="switchButton"
+          onclick="switchAuthMode()"
+        >
+          Sign up
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
 
   <script>
+    /* =========================================================
+       VYRO SUPABASE CONFIGURATION
+       ========================================================= */
+
+    const SUPABASE_URL =
+      "https://wvxfambjjxwscaujoaop.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_bGjZzJVDVQK9fxV83_SpWQ_3rzEigkh";
+
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+    /* =========================================================
+       STATE
+       ========================================================= */
+
+    let authMode = "login";
+    let currentUser = null;
+
+
+    /* =========================================================
+       AUTH MODAL
+       ========================================================= */
 
     function openLogin() {
+      authMode = "login";
+      updateAuthModal();
+      clearAuthMessage();
+
+      document.getElementById("authModal").classList.add("show");
+
+      setTimeout(() => {
+        document.getElementById("email").focus();
+      }, 100);
+    }
+
+
+    function openSignup() {
+      authMode = "signup";
+      updateAuthModal();
+      clearAuthMessage();
+
+      document.getElementById("authModal").classList.add("show");
+
+      setTimeout(() => {
+        document.getElementById("displayName").focus();
+      }, 100);
+    }
+
+
+    function closeAuth() {
+      document.getElementById("authModal").classList.remove("show");
+      clearAuthMessage();
+    }
+
+
+    function switchAuthMode() {
+      authMode = authMode === "login" ? "signup" : "login";
+      updateAuthModal();
+      clearAuthMessage();
+    }
+
+
+    function updateAuthModal() {
+
+      const title = document.getElementById("authTitle");
+      const subtitle = document.getElementById("authSubtitle");
+      const submit = document.getElementById("authSubmit");
+      const nameField = document.getElementById("nameField");
+      const password = document.getElementById("password");
+      const switchText = document.getElementById("switchText");
+      const switchButton = document.getElementById("switchButton");
+
+      if (authMode === "signup") {
+
+        title.textContent = "Create your VYRO account";
+
+        subtitle.textContent =
+          "Join VYRO and start building your creator profile.";
+
+        submit.textContent = "Create account";
+
+        nameField.style.display = "block";
+
+        password.autocomplete = "new-password";
+
+        switchText.textContent = "Already have an account?";
+
+        switchButton.textContent = "Sign in";
+
+      } else {
+
+        title.textContent = "Welcome back";
+
+        subtitle.textContent =
+          "Sign in to your VYRO account.";
+
+        submit.textContent = "Sign in";
+
+        nameField.style.display = "none";
+
+        password.autocomplete = "current-password";
+
+        switchText.textContent = "Don't have an account?";
+
+        switchButton.textContent = "Sign up";
+      }
+    }
+
+
+    /* =========================================================
+       AUTH MESSAGE
+       ========================================================= */
+
+    function showAuthMessage(message, type = "error") {
+
+      const box = document.getElementById("authMessage");
+
+      box.textContent = message;
+
+      box.className = "message show " + type;
+    }
+
+
+    function clearAuthMessage() {
+
+      const box = document.getElementById("authMessage");
+
+      box.textContent = "";
+
+      box.className = "message";
+    }
+
+
+    /* =========================================================
+       SIGN UP / SIGN IN
+       ========================================================= */
+
+    async function handleAuth(event) {
+
+      event.preventDefault();
+
+      const email =
+        document.getElementById("email").value.trim();
+
+      const password =
+        document.getElementById("password").value;
+
+      const displayName =
+        document.getElementById("displayName").value.trim();
+
+      const submit =
+        document.getElementById("authSubmit");
+
+      clearAuthMessage();
+
+      submit.disabled = true;
+
+      submit.textContent =
+        authMode === "signup"
+          ? "Creating account..."
+          : "Signing in...";
+
+      try {
+
+        if (authMode === "signup") {
+
+          if (!displayName) {
+
+            showAuthMessage(
+              "Please enter a display name."
+            );
+
+            submit.disabled = false;
+            submit.textContent = "Create account";
+
+            return;
+          }
+
+          const { data, error } =
+            await supabaseClient.auth.signUp({
+
+              email: email,
+
+              password: password,
+
+              options: {
+                data: {
+                  display_name: displayName
+                },
+
+                emailRedirectTo:
+                  "https://vyro-naj2-if10ankxf-vyro-64fc.vercel.app/"
+              }
+
+            });
+
+          if (error) {
+            throw error;
+          }
+
+          if (data.session) {
+
+            showAuthMessage(
+              "Your VYRO account has been created!",
+              "success"
+            );
+
+            setTimeout(() => {
+              closeAuth();
+            }, 1200);
+
+          } else {
+
+            showAuthMessage(
+              "Account created! Check your email to verify your VYRO account.",
+              "success"
+            );
+
+          }
+
+        } else {
+
+          const { data, error } =
+            await supabaseClient.auth.signInWithPassword({
+              email,
+              password
+            });
+
+          if (error) {
+            throw error;
+          }
+
+          currentUser = data.user;
+
+          showAuthMessage(
+            "Signed in successfully!",
+            "success"
+          );
+
+          setTimeout(() => {
+            closeAuth();
+            updateAccountUI(currentUser);
+          }, 700);
+
+        }
+
+      } catch (error) {
+
+        console.error("VYRO authentication error:", error);
+
+        let message =
+          error.message || "Something went wrong.";
+
+        if (
+          message.toLowerCase().includes("invalid login credentials")
+        ) {
+          message =
+            "Incorrect email or password.";
+        }
+
+        if (
+          message.toLowerCase().includes("email not confirmed")
+        ) {
+          message =
+            "Please verify your email before signing in.";
+        }
+
+        if (
+          message.toLowerCase().includes("user already registered")
+        ) {
+          message =
+            "That email is already registered. Try signing in instead.";
+        }
+
+        showAuthMessage(message);
+
+      } finally {
+
+        submit.disabled = false;
+
+        submit.textContent =
+          authMode === "signup"
+            ? "Create account"
+            : "Sign in";
+      }
+    }
+
+
+    /* =========================================================
+       SESSION
+       ========================================================= */
+
+    async function loadSession() {
+
+      const {
+        data,
+        error
+      } = await supabaseClient.auth.getSession();
+
+      if (error) {
+
+        console.error(
+          "Could not load VYRO session:",
+          error
+        );
+
+        return;
+      }
+
+      if (data.session) {
+
+        currentUser = data.session.user;
+
+        updateAccountUI(currentUser);
+
+      } else {
+
+        updateAccountUI(null);
+      }
+    }
+
+
+    supabaseClient.auth.onAuthStateChange(
+      (event, session) => {
+
+        currentUser =
+          session ? session.user : null;
+
+        updateAccountUI(currentUser);
+
+        if (event === "SIGNED_OUT") {
+          closeAccountMenu();
+        }
+      }
+    );
+
+
+    /* =========================================================
+       ACCOUNT UI
+       ========================================================= */
+
+    function updateAccountUI(user) {
+
+      const signInButton =
+        document.getElementById("signInButton");
+
+      const signUpButton =
+        document.getElementById("signUpButton");
+
+      const accountButton =
+        document.getElementById("accountButton");
+
+      if (!user) {
+
+        signInButton.style.display = "";
+        signUpButton.style.display = "";
+        accountButton.style.display = "none";
+
+        return;
+      }
+
+      signInButton.style.display = "none";
+      signUpButton.style.display = "none";
+      accountButton.style.display = "flex";
+
+      const displayName =
+        user.user_metadata?.display_name ||
+        user.email?.split("@")[0] ||
+        "VYRO User";
+
+      document.getElementById(
+        "accountButtonName"
+      ).textContent = displayName;
+
+      document.getElementById(
+        "menuName"
+      ).textContent = displayName;
+
+      document.getElementById(
+        "menuEmail"
+      ).textContent = user.email || "";
+
+      document.getElementById(
+        "accountAvatar"
+      ).textContent =
+        displayName.charAt(0).toUpperCase();
+    }
+
+
+    /* =========================================================
+       ACCOUNT MENU
+       ========================================================= */
+
+    function toggleAccountMenu() {
+
+      document
+        .getElementById("accountMenu")
+        .classList.toggle("show");
+    }
+
+
+    function closeAccountMenu() {
+
+      document
+        .getElementById("accountMenu")
+        .classList.remove("show");
+    }
+
+
+    async function signOutUser() {
+
+      const { error } =
+        await supabaseClient.auth.signOut();
+
+      if (error) {
+
+        alert(
+          "Could not sign out: " +
+          error.message
+        );
+
+        return;
+      }
+
+      currentUser = null;
+
+      updateAccountUI(null);
+
+      closeAccountMenu();
+
+      alert("You have been signed out of VYRO.");
+    }
+
+
+    /* =========================================================
+       PROTECTED FEATURES
+       ========================================================= */
+
+    function requireLogin(feature) {
+
+      if (!currentUser) {
+
+        showAuthMessage(
+          `Sign in or create a VYRO account to use ${feature}.`,
+          "error"
+        );
+
+        openLogin();
+
+        return;
+      }
+
+      showComingSoon(feature);
+    }
+
+
+    function openProfile() {
+
+      closeAccountMenu();
+
+      if (!currentUser) {
+        openLogin();
+        return;
+      }
+
+      showComingSoon("Your VYRO profile");
+    }
+
+
+    /* =========================================================
+       GENERAL UI
+       ========================================================= */
+
+    function showComingSoon(feature) {
+
       alert(
-        "VYRO Sign In is coming next."
+        feature +
+        " is part of the next VYRO build."
       );
     }
 
-    function openSignup() {
-      alert(
-        "VYRO Sign Up is coming next."
-      );
+
+    function goHome() {
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
     }
+
 
     function searchVYRO() {
 
@@ -1512,10 +1684,41 @@
       }
 
       alert(
-        "Searching VYRO for: " + query
+        `VYRO search for "${query}" will be connected to the video database next.`
       );
-
     }
+
+
+    /* =========================================================
+       CLOSE MENUS WHEN CLICKING OUTSIDE
+       ========================================================= */
+
+    document.addEventListener(
+      "click",
+      function(event) {
+
+        const accountButton =
+          document.getElementById("accountButton");
+
+        const accountMenu =
+          document.getElementById("accountMenu");
+
+        if (
+          !accountButton.contains(event.target) &&
+          !accountMenu.contains(event.target)
+        ) {
+
+          closeAccountMenu();
+        }
+      }
+    );
+
+
+    /* =========================================================
+       START VYRO
+       ========================================================= */
+
+    loadSession();
 
   </script>
 
